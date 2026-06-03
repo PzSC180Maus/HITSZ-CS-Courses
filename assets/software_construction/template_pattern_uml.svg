@@ -1,0 +1,90 @@
+<svg viewBox="0 0 1000 700" xmlns="http://www.w3.org/2000/svg">
+  <!-- Define styles -->
+  <defs>
+    <style>
+      .abstract-box { fill: #ffe8cc; stroke: #333; stroke-width: 2; }
+      .class-box { fill: #fffacd; stroke: #333; stroke-width: 2; }
+      .text-title { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; }
+      .text-method { font-family: Arial, sans-serif; font-size: 12px; }
+      .text-abstract { font-family: Arial, sans-serif; font-size: 12px; font-style: italic; }
+      .stereotype { font-family: Arial, sans-serif; font-size: 11px; font-style: italic; fill: #333; }
+      .line { stroke: #333; stroke-width: 2; fill: none; }
+      .inherits-arrow { stroke: #333; stroke-width: 2; fill: none; marker-end: url(#arrowhead-impl); }
+    </style>
+    <marker id="arrowhead-impl" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="white" stroke="#333" stroke-width="1.5"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="500" y="30" text-anchor="middle" class="text-title" font-size="18">模板模式 UML 类图</text>
+
+  <!-- ===== Abstract Class ===== -->
+
+  <rect x="250" y="80" width="500" height="200" class="abstract-box"/>
+  <line x1="250" y1="105" x2="750" y2="105" class="line"/>
+  <text x="500" y="100" text-anchor="middle" class="stereotype">&lt;&lt;abstract&gt;&gt;</text>
+  <text x="500" y="120" text-anchor="middle" class="text-title">AbstractClass</text>
+  <line x1="250" y1="125" x2="750" y2="125" class="line"/>
+  
+  <!-- Methods -->
+  <text x="260" y="150" class="text-method">+ <tspan class="text-title">templateMethod()</tspan> <tspan class="text-method" font-size="10">(final)</tspan></text>
+  <text x="280" y="168" class="text-method">// 固定流程：</text>
+  <text x="280" y="185" class="text-method">1. step1()</text>
+  <text x="280" y="202" class="text-method">2. step2()</text>
+  <text x="280" y="219" class="text-method">3. step3()</text>
+  <text x="280" y="236" class="text-method">4. step4()</text>
+  
+  <line x1="250" y1="250" x2="750" y2="250" class="line"/>
+  
+  <text x="260" y="270" class="text-abstract"># abstract step1(): void</text>
+  <text x="260" y="290" class="text-abstract"># abstract step3(): void</text>
+  <text x="260" y="310" class="text-method"># step2(): void</text>
+  <text x="260" y="330" class="text-method"># step4(): void</text>
+
+  <!-- ===== Concrete Class A ===== -->
+
+  <rect x="50" y="350" width="350" height="180" class="class-box"/>
+  <line x1="50" y1="375" x2="400" y2="375" class="line"/>
+  <text x="225" y="395" text-anchor="middle" class="text-title">ConcreteClassA</text>
+  <line x1="50" y1="400" x2="400" y2="400" class="line"/>
+  
+  <text x="60" y="425" class="text-method">+ step1(): void</text>
+  <text x="80" y="442" class="text-method">// 数据加载 - 从A类型源加载</text>
+  <text x="60" y="465" class="text-method">+ step3(): void</text>
+  <text x="80" y="482" class="text-method">// 格式转化 - A类型转换</text>
+
+  <!-- ===== Concrete Class B ===== -->
+
+  <rect x="600" y="350" width="350" height="180" class="class-box"/>
+  <line x1="600" y1="375" x2="950" y2="375" class="line"/>
+  <text x="775" y="395" text-anchor="middle" class="text-title">ConcreteClassB</text>
+  <line x1="600" y1="400" x2="950" y2="400" class="line"/>
+  
+  <text x="610" y="425" class="text-method">+ step1(): void</text>
+  <text x="630" y="442" class="text-method">// 数据加载 - 从B类型源加载</text>
+  <text x="610" y="465" class="text-method">+ step3(): void</text>
+  <text x="630" y="482" class="text-method">// 格式转化 - B类型转换</text>
+
+  <!-- ===== Relationships ===== -->
+
+  <!-- ConcreteClassA extends AbstractClass -->
+  <path d="M 225 350 L 400 280" class="inherits-arrow" marker-end="url(#arrowhead-impl)"/>
+  <text x="270" y="315" class="text-method" font-size="10">extends</text>
+
+  <!-- ConcreteClassB extends AbstractClass -->
+  <path d="M 775 350 L 600 280" class="inherits-arrow" marker-end="url(#arrowhead-impl)"/>
+  <text x="680" y="315" class="text-method" font-size="10">extends</text>
+
+  <!-- Legend -->
+  <text x="50" y="600" class="text-method" font-size="11" font-weight="bold">核心说明：</text>
+  <text x="50" y="625" class="text-method" font-size="11">
+    <tspan x="50">• AbstractClass 定义模板方法 templateMethod() 为 final，确保流程不变</tspan>
+  </text>
+  <text x="50" y="645" class="text-method" font-size="11">
+    <tspan x="50">• 可变步骤（step1、step3）声明为 abstract，由具体子类实现</tspan>
+  </text>
+  <text x="50" y="665" class="text-method" font-size="11">
+    <tspan x="50">• 通用步骤（step2、step4）在抽象类中实现</tspan>
+  </text>
+</svg>

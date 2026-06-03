@@ -1,0 +1,49 @@
+<svg width="600" height="400" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景 -->
+  <rect width="600" height="400" fill="#f9f9f9" />
+  
+  <!-- 主存地址格式 -->
+  <text x="20" y="30" font-family="Arial" font-size="16" font-weight="bold">1. 主存地址字段划分 (24位)</text>
+  <rect x="50" y="50" width="200" height="40" fill="#e1f5fe" stroke="#01579b" stroke-width="2" />
+  <rect x="250" y="50" width="120" height="40" fill="#fff9c4" stroke="#fbc02d" stroke-width="2" />
+  <rect x="370" y="50" width="100" height="40" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2" />
+  
+  <text x="110" y="75" font-family="Arial" font-size="14">Tag (主存字块标记)</text>
+  <text x="275" y="75" font-family="Arial" font-size="14">Index (组索引)</text>
+  <text x="385" y="75" font-family="Arial" font-size="14">Offset (偏移)</text>
+  
+  <text x="125" y="110" font-family="Arial" font-size="12">12位</text>
+  <text x="295" y="110" font-family="Arial" font-size="12">7位</text>
+  <text x="405" y="110" font-family="Arial" font-size="12">5位</text>
+
+  <!-- Cache 结构 -->
+  <text x="20" y="160" font-family="Arial" font-size="16" font-weight="bold">2. 四路组相联 Cache 逻辑结构</text>
+  
+  <!-- 组展示 -->
+  <rect x="50" y="180" width="40" height="180" fill="#eee" stroke="#666" />
+  <text x="55" y="200" font-family="Arial" font-size="12">第0组</text>
+  <text x="55" y="240" font-family="Arial" font-size="12">第1组</text>
+  <text x="60" y="280" font-family="Arial" font-size="20">...</text>
+  <text x="55" y="340" font-family="Arial" font-size="12">第127组</text>
+
+  <!-- 路展示 -->
+  <rect x="120" y="180" width="80" height="30" fill="#fff" stroke="#333" />
+  <rect x="200" y="180" width="80" height="30" fill="#fff" stroke="#333" />
+  <rect x="280" y="180" width="80" height="30" fill="#fff" stroke="#333" />
+  <rect x="360" y="180" width="80" height="30" fill="#fff" stroke="#333" />
+  
+  <text x="135" y="200" font-family="Arial" font-size="12">路0 (Way)</text>
+  <text x="215" y="200" font-family="Arial" font-size="12">路1 (Way)</text>
+  <text x="295" y="200" font-family="Arial" font-size="12">路2 (Way)</text>
+  <text x="375" y="200" font-family="Arial" font-size="12">路3 (Way)</text>
+
+  <!-- 详细说明 -->
+  <line x1="480" y1="50" x2="520" y2="50" stroke="#000" />
+  <text x="490" y="250" font-family="Arial" font-size="12" fill="#555">
+    <tspan x="470" dy="1.2em">设计参数：</tspan>
+    <tspan x="470" dy="1.2em">- 块大小: 32B</tspan>
+    <tspan x="470" dy="1.2em">- Cache总块数: 512</tspan>
+    <tspan x="470" dy="1.2em">- 组数: 128组</tspan>
+    <tspan x="470" dy="1.2em">- 每组: 4个字块</tspan>
+  </text>
+</svg>
