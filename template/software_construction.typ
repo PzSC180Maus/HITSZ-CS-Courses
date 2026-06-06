@@ -329,7 +329,13 @@ Java 异常是识别及响应错误的一致性机制，使正常逻辑与错误
 == 4. 多态 (Polymorphism)
 同一个行为具有多种表现形态（一个接口，多个实现）。
 
-#property[实现条件][继承/实现、方法重写 (Override)、父类引用指向子类对象。]
+#property[实现条件][
+多态必须同时满足：
++ 有继承 / 实现
++ 有方法重写
++ 父类引用指向子类对象
+
+]
 #property[重写 (Override) vs 重载 (Overload)][
   - *重写*：方法名、参数完全一致，发生在子类对父类。
   - *重载*：方法名同，参数不同，发生在同一个类。
@@ -506,6 +512,8 @@ Java 异常是识别及响应错误的一致性机制，使正常逻辑与错误
   }
   ```
 ]
+
+
 #definition[工厂模式 (Factory)][
   将对象的创建逻辑封装在工厂类中，客户端无需知道具体的类名。
   - 简单工厂、工厂方法、抽象工厂。
@@ -738,12 +746,85 @@ Java 异常是识别及响应错误的一致性机制，使正常逻辑与错误
   ```
 ]
 
+=== 模板方法模式 (Template Pattern)
+#property[核心思想][
+  定义一个操作中的算法骨架，而将一些步骤延迟到子类中。模板方法使得子类可以不改变一个算法的结构即可重定义该算法的某些特定步骤。
+]
+
+#property[核心角色][
+  - *抽象类 (AbstractClass)*：定义并实现一个模板方法。它给出了一个顶级逻辑框架，而逻辑框架中的某些步骤（基本方法）可以是抽象的，也可以是具体的。
+  - *具体子类 (ConcreteClass)*：实现父类所定义的抽象方法以完成算法中与特定子类相关的步骤。
+]
+
+#property[方法分类][
+  - *模板方法 (Template Method)*：定义在抽象类中，组合多个基本方法形成算法框架。通常声明为 `final` 以防止子类破坏算法流程。
+  - *基本方法 (Basic Method)*：
+    - *抽象方法 (Abstract Method)*：子类必须实现的特定逻辑。
+    - *钩子方法 (Hook Method)*：父类提供默认或空实现，子类按需重写以干预流程。
+]
+
+#property[应考重点][
+  - *优点*：封装不变部分，扩展可变部分（OCP）；提取公共代码便于维护；由父类控制流程，子类仅负责具体实现。
+  - *多态的应用*：通过抽象类引用指向具体子类对象，利用*动态绑定*机制在运行时调用具体子类重写的方法。
+]
+
+#example[数据入库场景][
+  ```java
+  abstract class DataImporter {
+      // 模板方法：定义固定算法骨架
+      public final void importData() {
+          load();         // 步骤1：加载
+          validate();     // 步骤2：校验（通用）
+          convert();      // 步骤3：转换
+          write();        // 步骤4：写入（通用）
+      }
+      abstract void load();    // 抽象方法：由子类实现
+      abstract void convert(); // 抽象方法：由子类实现
+      
+      void validate() { System.out.println("通用校验逻辑"); }
+      void write() { System.out.println("通用写入数据库"); }
+  }
+
+  class MySqlImporter extends DataImporter {
+      void load() { System.out.println("从 MySQL 读取数据"); }
+      void convert() { System.out.println("转换为标准 JSON 格式"); }
+  }
+  ```
+]
+
+== UML 类图规范
+
+#property[可见性符号 (Visibility)][
+  - `+`：*public* (公有) - 全局可访问。
+  - `-`：*private* (私有) - 仅限本类内部访问。
+  - `#`：*protected* (受保护) - 本类、子类或同包可访问。
+  - `~`：*package* (包) - 仅限同一个包内访问。
+]
+
+#property[类间关系总结 (Relationships)][
+  #table(
+    columns: (2fr, 2fr, 5fr),
+    stroke: 0.5pt + gray,
+    align: (center + horizon, center + horizon, left + horizon),
+    inset: 0.6em,
+    fill: (x, y) => if y == 0 { blue.lighten(90%) } else { none },
+    [*关系类型*], [*图形符号*], [*语义与 Java 关联*],
+    [泛化 (Inheritance)], [实线 + 空心三角], [继承关系 (`extends`)。子类指向父类。],
+    [实现 (Realization)], [虚线 + 空心三角], [接口实现 (`implements`)。实现类指向接口。],
+    [组合 (Composition)], [实线 + 实心菱形], [强整体-部分关系。整体消失则部分必消失。],
+    [聚合 (Aggregation)], [实线 + 空心菱形], [弱整体-部分关系。部分可独立于整体存活。],
+    [关联 (Association)], [实线 + 普通箭头], [类 A 持有类 B 的成员变量。长期且稳定的关系。],
+    [依赖 (Dependency)], [虚线 + 普通箭头], [类 A 在方法中使用类 B (参数/局部变量)。短暂关系。],
+  )
+]
+
+下面是一个参考(下图中不能画实线)
+#image("../assets/observer_pattern_uml.svg", width: 80%)
 
 #problemset[
   #exercise[在 LinkedList 中间插入元素是否一定比 ArrayList 快？请分析原因。]
   #exercise[为什么策略模式建议在 `Context` 中调用策略方法，而不是让 `Client` 直接调用？]
   #solution[为了屏蔽高层模块对具体算法细节的访问，封装可能存在的变化，降低耦合度。]
-  #exercise[为什么遍历 `HashSet` 时不能使用带索引的 `for` 循环，而必须使用 `foreach` 或 `Iterator`？]
   #exercise[数组和集合是否都能装载不同类型的数据？]
   #solution[可以。数组只需声明为 `Object[]`；集合由于只能存储对象引用，默认即可存储不同类型的对象（虽通常推荐泛型约束）。]
   #exercise[策略模式是创建型还是行为型模式？为什么？]
@@ -764,7 +845,7 @@ Java 异常是识别及响应错误的一致性机制，使正常逻辑与错误
       [Set 中的元素是可以重复的],
       [List 中的元素是无序的],
       [HashSet 中可以使用 for-each 来迭代访问其中的元素],
-      [List 中的元素是不可以重复 of],
+      [List 中的元素是不可以重复],
     )
   ]
   #solution[C。`HashSet` 可以使用 `for-each` 迭代。A 错，Set 元素不可重复；B 错，List 有序（有下标）；D 错，List 元素可重复。]
@@ -915,14 +996,22 @@ Java 异常是识别及响应错误的一致性机制，使正常逻辑与错误
     }
     ```
     优点：线程安全（类加载机制保证单例唯一）；实现简单。缺点：无论是否使用都会创建实例，可能浪费内存资源。\ #h(2em)
-    (3) 填空答案：
-    ① `Singleton.class`
-    ② `objectClass.getDeclaredConstructor()`
-    ③ `(Singleton) constructor.newInstance()` \ #h(2em)
+    (3) ```java
+      public class SingletonTest {
+        public static void main() {
+          Class<?> objectClass = Singleton.class;
+          Constructor<?> constructor = objectClass.getDeclaredConstructor();
+          constructor.setAccessible(true);
+          Singleton newInstance = (Singleton) constructor.newInstance();
+        }
+      }
+    ```
     (4) 在私有构造方法中加入防御代码：
     ```java
     private Singleton() {
-        if (INSTANCE != null) throw new RuntimeException("单例已存在，禁止反射创建！");
+        if (INSTANCE != null) {
+          throw new RuntimeException("单例已存在，禁止反射创建新实例");
+        }
     }
     ```
   ]
@@ -1192,7 +1281,7 @@ Java 异常是识别及响应错误的一致性机制，使正常逻辑与错误
 
 #introduction[流 (Stream)][字节/字符流][序列化][Path & Files][DAO 模式]
 
-== 1. Java 流 (Streams)
+== Java 流 (Streams)
 流是一个抽象概念，是一组有序的数据序列。Java 中所有的 I/O 操作都以“流”的方式进行。
 
 #property[流的分类][
@@ -1226,7 +1315,7 @@ Java 异常是识别及响应错误的一致性机制，使正常逻辑与错误
   ```
 ]
 
-== 2. 操作文件 (Path & Files)
+== 操作文件 (Path & Files)
 Java NIO 提供了 `Path` 和 `Files` 工具类，比传统的 `File` 类更强大、更简洁。
 
 #property[Path][表示路径。`Paths.get("path/to/file")`。]
@@ -1236,7 +1325,7 @@ Java NIO 提供了 `Path` 和 `Files` 工具类，比传统的 `File` 类更强�
   - *属性*：`exists()`, `size()`, `isDirectory()`。
 ]
 
-== 3. 对象序列化 (Serialization)
+== 对象序列化 (Serialization)
 将 Java 对象转换为字节序列的过程。
 
 #property[用途][
@@ -1278,7 +1367,7 @@ Java NIO 提供了 `Path` 和 `Files` 工具类，比传统的 `File` 类更强�
   ```
 ]
 
-== 4. 数据访问对象模式 (DAO Pattern)
+== 数据访问对象模式 (DAO Pattern)
 DAO 模式旨在将低级的数据访问 API 与高级业务逻辑分离。
 
 #property[核心参与者][
@@ -1328,7 +1417,7 @@ DAO 模式旨在将低级的数据访问 API 与高级业务逻辑分离。
   - *解耦*：降低了服务层与存储层的耦合度。
 ]
 
-=== 5. try-with-resources (Java 7+)
+=== try-with-resources (Java 7+)
 由于流是稀缺资源，必须在使用后关闭。传统的 `finally` 关闭写法极其臃肿且容易出错。
 
 #property[原理][
@@ -1352,8 +1441,11 @@ DAO 模式旨在将低级的数据访问 API 与高级业务逻辑分离。
 
 #problemset[
   #exercise[读取一个 Word 文档时，应使用字节流还是字符流？为什么？]
+  #solution[字节流，因为 Word 文档是二进制格式，字符流适用于文本数据。]
   #exercise[当一个类实现了 `Serializable` 接口，但其内部持有的一个成员对象类没有实现该接口，序列化时会发生什么？]
+  #solution[会抛出 `NotSerializableException`，因为序列化需要递归地序列化所有成员对象。]
   #exercise[在 DAO 模式中，为什么要设计接口而不是直接写实现类？这体现了哪个 SOLID 原则？]
+  #solution[设计接口可以实现更好的解耦和灵活性，符合 SOLID 原则中的*依赖倒置原则*（DIP）。服务层依赖于抽象接口而非具体实现，使得底层存储方式可以随时替换而不影响业务逻辑。]
   #exercise[I/O 中的“输入”和“输出”是相对于哪里定义的？]
   #solution[相对于内存。流入内存的是输入，流出内存的是输出。]
   #exercise[`FilterInputStream` 是字符流还是字节流？]
@@ -1558,15 +1650,21 @@ Swing 核心设计模式。
 #property[线程 (Thread)][进程内的单一顺序控制流。是 *CPU 调度* 的最小单位。多个线程共享进程内的内存（堆）。]
 
 #definition[对比总结][
-  | 特性 | 进程 | 线程 |
-  | --- | --- | --- |
-  | 重量级 | 重 (各自独立资源) | 轻 (共享资源) |
-  | 内存共享 | 不共享 | 共享 (堆、方法区) |
-  | 隔离性 | 高 | 低 (一崩俱崩) |
-  | 单位 | 资源分配单位 | 程序执行/调度单位 |
-  #table
+  #table(
+    columns: 3,
+    align: center,    // 全部居中
+    stroke: 1pt,     // 边框粗细
+    
+    // 表头
+    [特性], [进程], [线程],
+    
+    // 行内容
+    [重量级], [重 (各自独立资源)], [轻 (共享资源)],
+    [内存共享], [不共享], [共享 (堆、方法区)],
+    [隔离性], [高], [低 (一崩俱崩)],
+    [单位], [资源分配单位], [程序执行/调度单位]
+  )
 ]
-
 #definition[线程生命周期 (State)][
   1. *New (新建)*：`new Thread()` 后尚未 `start()`。
   2. *Runnable (就绪/运行)*：等待 CPU 时间片或正在执行。
@@ -1684,9 +1782,22 @@ Swing 核心设计模式。
 ]
 
 #problemset[
-  #exercise[`sleep()` 和 `wait()` 的异同点？]
-  #exercise[为什么在检查 `wait()` 条件时必须使用 `while` 循环而不是 `if` 语句？（提示：虚假唤醒）]
-  #exercise[为什么 `wait()` 方法必须放在 `synchronized` 同步块中运行？]
+
+#exercise[`sleep()` 和 `wait()` 的异同点？]
+#solution[
+  *相同*：均阻塞线程、可被中断抛`InterruptedException`。
+  *不同*：
+  1. `sleep`：`Thread`静态方法，*不释放锁*，任意位置可用，到时自动唤醒；
+  2. `wait`：`Object`成员方法，*释放锁*，仅限`synchronized`内，靠`notify/notifyAll`或超时唤醒。
+]
+#exercise[为什么在检查 `wait()` 条件时必须使用 `while` 循环而不是 `if` 语句？（提示：虚假唤醒）]
+  #solution[
+  存在*虚假唤醒*，线程无通知也可能被唤醒；`if`只校验一次，唤醒后直接执行出错；`while`被唤醒后循环重试条件，不满足则继续等待。
+  ]
+#exercise[为什么 `wait()` 方法必须放在 `synchronized` 同步块中运行？]
+#solution[
+  `wait`依赖对象监视器Monitor，需先持有锁才能释放锁；不在同步代码块会抛出`IllegalMonitorStateException`，同时保证条件判断和等待原子性。
+]
   #exercise[为什么在多线程中实现 `Runnable` 接口比继承 `Thread` 类通常更优？]
   #solution[1. 遵循“面向接口编程”思想，任务与运行机制松耦合。2. 避免了 Java 单继承的限制。3. 性能开销更小，不需要继承 Thread 类的所有方法。]
   #exercise[`wait(time)` 方法能否被 `notify()` 或 `notifyAll()` 唤醒？]
@@ -1694,7 +1805,13 @@ Swing 核心设计模式。
   #exercise[生产者-消费者模式中，为什么不推荐用 `sleep()` 代替 `wait()`？]
   #solution[1. `sleep` 不会释放持有的锁，导致其它线程（如生产者/消费者）无法进入同步区。2. `sleep` 必须指定具体时间，无法灵活地根据任务完成情况唤醒协作方。]
   #exam[2022年 选择][
-    代码 `Thread t = new Thread(() -> { Thread.sleep(2000); print("2"); }); t.start(); t.join(); print("1");` 执行结果为：
+     ```java
+      Thread t = new Thread(() -> { Thread.sleep(2000); print("2"); }); 
+      t.start(); 
+      t.join(); 
+      print("1");
+    ```
+    执行结果为：
     #choices(
       [21],
       [12],
@@ -1764,13 +1881,15 @@ Swing 核心设计模式。
         }
     }
     ```
-    (1) 注释 (A) 中，`this` 指代的是什么？（1分）
-    (2) 注释 (B) 中，如果把 `while` 改为 `if`，会产生什么后果？（2分）
-    (3) 生产者-消费者模式的优点有哪些？（2分）]
+    (1) 缓冲池为什么一定要同步？(1分)
+    (2) 注释 (A) 中，`this` 指代的是什么？（1分）
+    (3) 注释 (B) 中，如果把 `while` 改为 `if`，会产生什么后果？（2分）
+    (4) 生产者-消费者模式的优点有哪些？（2分）]
   #solution[
-    (1) `this` 指当前 `Buffer` 对象实例，用作同步锁。
-    (2) 如果用 `if` 判断，线程被唤醒后不再检查条件就直接执行后续代码。由于可能存在"虚假唤醒"或被其他线程抢先消费，可能导致在条件不满足时继续执行（如列表已满仍 add）。必须用 `while` 保证唤醒后再次检查条件。
-    (3) 优点：解耦生产者和消费者，各自独立处理；缓冲队列削峰填谷，平衡处理速度差异；提高系统吞吐量。
+    (1) 生产者和消费者线程需要访问共享的缓冲区（`list`）。如果不进行同步，可能会出现数据竞争（如同时修改 `list` 导致数据不一致）或线程安全问题（如一个线程正在检查 `list.size()`，另一个线程正在修改 `list`）。同步保证了同一时刻只有一个线程可以访问缓冲区，确保数据的一致性和正确性。
+    (2) `this` 指当前 `Buffer` 对象实例，用作同步锁。
+    (3) 如果用 `if` 判断，线程被唤醒后不再检查条件就直接执行后续代码。由于可能存在"虚假唤醒"或被其他线程抢先消费，可能导致在条件不满足时继续执行（如列表已满仍 add）。必须用 `while` 保证唤醒后再次检查条件。
+    (4) 优点：解耦生产者和消费者，各自独立处理；缓冲队列削峰填谷，平衡处理速度差异；提高系统吞吐量。
   ]
   #exam[2025年 简答][阅读以下代码，完成(1)~(3)问题。（5分）
     ```java
@@ -1809,8 +1928,8 @@ Swing 核心设计模式。
     (2) 这个问题如何产生？（2分）
     (3) 怎么解决这个问题？（2分）]
   #solution[
-    (1) 产生死锁（Deadlock）。两个线程互相等待对方释放锁，程序永久阻塞无法继续。
-    (2) 线程 t1 先持有 `lockA` 再请求 `lockB`，线程 t2 先持有 `lockB` 再请求 `lockA`，形成*循环等待*——四个必要条件齐备（互斥、持有并等待、不可剥夺、循环等待），触发死锁。
+    (1) 产生死锁（Deadlock）。两个线程互相等待对方释放锁，程序永久阻塞无法继续。\
+    (2) 线程 t1 先持有 `lockA` 再请求 `lockB`，线程 t2 先持有 `lockB` 再请求 `lockA`，形成*循环等待*——四个必要条件齐备（互斥、持有并等待、不可剥夺、循环等待），触发死锁。\
     (3) 解决方法：保证锁的获取顺序一致。例如两个线程都先获取 `lockA` 再获取 `lockB`（即把 t2 中 `lockB` 和 `lockA` 的顺序交换），打破循环等待条件。
   ]
   #exam[2022年 简答][关于多线程编程，使用 Runnable 接口相比继承 Thread 类有什么优势？]
@@ -1881,11 +2000,39 @@ Swing 核心设计模式。
 ]
 
 #problemset[
-  #exercise[为什么 `List<Object>` 不能接收 `List<String>` 类型的参数，而 `List<?>` 可以？]
-  #exercise[写出通过反射获取一个类中名为 `secretMethod` 的私有方法并执行它的核心代码步骤。]
-  #exercise[泛型信息在运行时期是否还存在？（提示：类型擦除）]
-  #exercise[泛型方法必须定义在泛型类中吗？]
-  #solution[不，泛型方法与泛型类没有依赖关系，普通类中也可以定义泛型方法。]
+  #example[为什么 `List<Object>` 不能接收 `List<String>` 类型的参数，而 `List<?>` 可以？]
+  #solution[
+  1. *核心原因：Java泛型不支持协变，且为保证类型安全*
+     - `List<String>` 是 `List<?>` 的子类型，但*不是* `List<Object>` 的子类型，泛型类型不具备继承关系的传递 性。
+     - 若允许 `List<Object>` 接收 `List<String>`，会破坏类型安全：
+       示例：`List<Object> list = new ArrayList<String>();` 后调用 `list.add(123);`，会向String集合插 入Integer类型数据，运行时引发类型转换异常，因此编译器直接禁止该赋值。
+     - `List<?>` 是无界通配符类型，表示*任意未知类型*的List，它是所有泛型List的父类型，因此可以接收   `List<String>`、`List<Integer>` 等任意泛型List；但该集合仅支持读取，不支持添加元素（除null外），保证了类型安全。
+  ]
+
+  #example[写出通过反射获取一个类中名为 `secretMethod` 的私有方法并执行它的核心代码步骤。]
+  #solution[
+  ```java
+  // 1. 获取目标类的Class对象（两种方式任选）
+  Class<?> clazz = 目标类.class;
+  // 2. 获取指定名称、指定参数类型的私有方法（getDeclaredMethod可获取所有权限修饰符的方法）
+  Method method = clazz.getDeclaredMethod("secretMethod"); 
+  // 3. 打破Java的访问权限检查，允许调用私有方法
+  method.setAccessible(true);
+  // 4. 创建目标类的实例对象（无参构造）
+  Object obj = clazz.newInstance(); 
+  // 5. 执行私有方法，接收返回值（无返回值则接收null）
+  Object result = method.invoke(obj);
+  ```
+  ]
+
+  #example[泛型信息在运行时期是否还存在？（提示：类型擦除）]
+  #solution[
+  *答案：泛型信息在运行期不存在，会被Java编译器完全擦除。*
+  1. Java泛型采用*类型擦除*机制：编译阶段会校验泛型的类型约束，编译完成后，泛型类型参数会被替换为原始类型（无界泛型 替换为Object，有界泛型替换为边界类型）；
+  2. 运行时JVM无法感知泛型的具体类型，例如`List<String>`和`List<Integer>`在运行时都是`List`类型；
+  3. 补充：仅类、方法、字段上的*泛型声明信息*会保留在字节码中，而对象实例的泛型类型在运行时完全丢失。
+  ]
+
   #exercise[泛型类中的静态方法如果想带泛型，为什么一定要定义为泛型方法？]
   #solution[因为静态方法属于类，不能引用对象实例化的类型参数，因此必须独立声明类型参数。]
   #exercise[是否可以通过 Class 反射获取抽象类或接口的信息？]
