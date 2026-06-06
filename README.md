@@ -45,7 +45,7 @@ typst compile template/{course_name}.typ --root .
 
 ## 5. 模板致谢
 
-本模板根据 [Quite-Elegant-Typ](https://github.com/OrangeX4/Quite-Elegant-Typ) 修改而来。
+本模板根据 [Quite-Elegant-Typ](https://github.com/a31474/quite-elegant-typ) 修改而来。
 
 ## 6. 许可证与开发
 
