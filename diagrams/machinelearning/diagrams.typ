@@ -361,3 +361,87 @@
     )
 }
 
+// Diagram 12 — M-P 神经元结构
+#let fig_12() = {
+  cetz.canvas({
+    import cetz.draw: *
+    
+    // 输入节点
+    circle((-3, 1), radius: 0.3, fill: rgb("#e3f2fd"), stroke: 1pt)
+    circle((-3, 0), radius: 0.3, fill: rgb("#e3f2fd"), stroke: 1pt)
+    circle((-3, -1), radius: 0.3, fill: rgb("#e3f2fd"), stroke: 1pt)
+    content((-3, 1.6), [$x_1$])
+    content((-3, 0.6), [$x_2$])
+    content((-3, -0.4), [$x_3$])
+    content((-3, -1.4), [$dots.v$])
+    
+    // 权重标签
+    content((-1.8, 1.3), [$w_1$])
+    content((-1.8, 0.3), [$w_2$])
+    content((-1.8, -0.7), [$w_3$])
+    
+    // 连接线
+    line((-2.7, 1), (-0.8, 0), stroke: 1pt)
+    line((-2.7, 0), (-0.8, 0), stroke: 1pt)
+    line((-2.7, -1), (-0.8, 0), stroke: 1pt)
+    
+    // 求和节点
+    circle((0, 0), radius: 0.8, fill: rgb("#fff3e0"), stroke: 1.5pt)
+    content((0, 0), [$sum$])
+    
+    // 偏置输入
+    content((-1.5, -1.8), [$w_0$ (偏置)])
+    line((-1.2, -1.5), (-0.5, -0.5), stroke: 1pt)
+    
+    // 激活函数
+    content((1.2, 0), [$->$])
+    
+    // 输出
+    rect((1.8, -0.5), (3.2, 0.5), fill: rgb("#e8f5e9"), stroke: 1pt, radius: 0.1)
+    content((2.5, 0), [阶跃函数])
+    
+    // 最终输出
+    line((3.2, 0), (4, 0), stroke: 1pt)
+    circle((4.3, 0), radius: 0.3, fill: rgb("#ffcdd2"), stroke: 1pt)
+    content((4.3, 0), [$o$])
+  })
+}
+
+// Diagram 13 — 蘑菇决策树（Odor 为根）
+#let fig_13() = {
+  fletcher.diagram(
+    node-stroke: 0.7pt,
+    node-fill: white,
+    spacing: (0.4cm, 0.5cm),
+
+    // 根节点
+    node((0, 0), [Odor?], shape: shapes.circle, fill: rgb("#e3f2fd")),
+
+    // 第 1 层
+    node((-2.5, 1.5), [1(Yes)], shape: rect, fill: rgb("#c8e6c9")),
+    node((0, 1.5), [2], shape: rect, fill: rgb("#fff3e0")),
+    node((2.5, 1.5), [3(No)], shape: rect, fill: rgb("#ffcdd2")),
+
+    // 第 2 层 — Color
+    node((0, 3), [Color?], shape: shapes.circle, fill: rgb("#e3f2fd")),
+
+    // 第 3 层 — Color 取值
+    node((-2.2, 4.5), [B → 需划分], shape: rect, fill: rgb("#ffebee")),
+    node((0, 4.5), [W → Yes], shape: rect, fill: rgb("#c8e6c9")),
+    node((2.2, 4.5), [G → No], shape: rect, fill: rgb("#ffcdd2")),
+
+    // Odor → 子节点
+    edge((0, 0), (-2.5, 1.5), "->", label: [1]),
+    edge((0, 0), (0, 1.5), "->", label: [2]),
+    edge((0, 0), (2.5, 1.5), "->", label: [3]),
+
+    // 2 → Color
+    edge((0, 1.5), (0, 3), "->"),
+
+    // Color → 取值
+    edge((0, 3), (-2.2, 4.5), "->", label: [B]),
+    edge((0, 3), (0, 4.5), "->", label: [W]),
+    edge((0, 3), (2.2, 4.5), "->", label: [G]),
+  )
+}
+

@@ -5,8 +5,9 @@
 #show table:set align(center)
 #default-cover(
   title: [机器学习期末突击讲义],
+  subtitle:[]
 )
-
+#set math.equation(numbering: none)
 #import "@preview/codly:1.3.0": *
 #import "@preview/codly-languages:0.1.1": *
 #show: codly-init.with()
@@ -257,14 +258,48 @@
   - 必须依赖某种"预先假定"（即归纳偏置）来缩小假设空间
 ]
 
-#note[
-  *关键结论*：
-  - 归纳偏置不是可选的，而是*学习的必要条件*
-  - 没有"绝对公正"的学习算法——所有学习算法都有偏置
-  - 不同算法的主要区别在于*偏置方式不同*（如决策树偏向信息增益大的属性、KNN偏向局部光滑性）
+
+
+#problemset[
+
+#example[2024期末考题 - 概念题（20分，每题4分）][
+  1. 归纳学习的定义
+  2. 聚类的定义
+  3. 线性判别函数的几何意义
+  4. 代价函数（Cost Function）
+  5. 特征的分类
 ]
 
-#example[2024期末考题 - 无偏学习及其无用性][
+#solution[
+  *1. 归纳学习的定义*\
+  归纳学习（Inductive Learning）是从具体训练样例中推断出一般性概念或规则的过程。即：给定某概念的一系列正例和反例，学习一个能正确分类所有样例的布尔函数（假设）。归纳学习依赖归纳偏置来约束假设空间，使算法能够泛化到未见实例。
+
+  *2. 聚类的定义*\
+  聚类（Clustering）是一种无监督学习方法，将数据集中的样本划分为若干组（簇），使得同一簇内的样本相似度高，不同簇间的样本相似度低。聚类不需要标签信息，目标是发现数据内在的结构。
+
+  *3. 线性判别函数的几何意义*\
+  线性判别函数 $g(bold(x)) = bold(w)^T bold(x) + w_0$ 在特征空间中定义一个超平面决策边界 $g(bold(x)) = 0$。其中：
+  - $bold(w)$ 是超平面的法向量，决定了决策边界的方向
+  - $w_0$ 是阈值，决定了决策边界相对于原点的偏移
+  - 样本点到超平面的有符号距离正比于 $g(bold(x)) / (||bold(w)||)$
+
+  *4. 代价函数（Cost Function）*\
+  代价函数（也称损失函数、目标函数）用于量化模型预测值与真实值之间的差异。常见的代价函数包括：
+  - 均方误差（MSE）：$J = 1/(2m) sum (y_i - hat(y)_i)^2$
+  - 交叉熵损失：$J = -sum y_i log(hat(y)_i)$
+  训练的目标是最小化代价函数，即找到使代价函数值最小的模型参数。
+
+  *5. 特征的分类*\
+  特征根据其取值类型可分为：
+  - *离散特征*：取值有限个类别（如颜色：红/绿/蓝）
+  - *连续特征*：取值为实数（如温度：25.3°C）
+  根据特征对分类的重要性可分为：
+  - *相关特征*：对分类有信息量
+  - *无关特征*：对分类无帮助
+  - *冗余特征*：与其他特征的相关性高、可被替代
+]
+
+#exam[2024期末考题 - 无偏学习及其无用性][
   解释"无偏学习"的概念，并说明为什么无偏学习是无用的。
 ]
 
@@ -278,46 +313,6 @@
   - 因此无法对未见实例做出有意义的预测
   - 有限的训练数据永远无法唯一确定目标概念，必须依赖归纳偏置来约束假设空间
 ]
-
-#problemset[
-
-#example[2024期末考题 - 概念题（20分，每题4分）][
-  1. 归纳学习的定义
-  2. 聚类的定义
-  3. 线性判别函数的几何意义
-  4. 代价函数（Cost Function）
-  5. 特征的分类
-]
-
-#solution[
-  *1. 归纳学习的定义*
-  归纳学习（Inductive Learning）是从具体训练样例中推断出一般性概念或规则的过程。即：给定某概念的一系列正例和反例，学习一个能正确分类所有样例的布尔函数（假设）。归纳学习依赖归纳偏置来约束假设空间，使算法能够泛化到未见实例。
-
-  *2. 聚类的定义*
-  聚类（Clustering）是一种无监督学习方法，将数据集中的样本划分为若干组（簇），使得同一簇内的样本相似度高，不同簇间的样本相似度低。聚类不需要标签信息，目标是发现数据内在的结构。
-
-  *3. 线性判别函数的几何意义*
-  线性判别函数 $g(bold(x)) = bold(w)^T bold(x) + w_0$ 在特征空间中定义一个超平面决策边界 $g(bold(x)) = 0$。其中：
-  - $bold(w)$ 是超平面的法向量，决定了决策边界的方向
-  - $w_0$ 是阈值，决定了决策边界相对于原点的偏移
-  - 样本点到超平面的有符号距离正比于 $g(bold(x)) / ||bold(w)||$
-
-  *4. 代价函数（Cost Function）*
-  代价函数（也称损失函数、目标函数）用于量化模型预测值与真实值之间的差异。常见的代价函数包括：
-  - 均方误差（MSE）：$J = 1/(2m) sum (y_i - hat(y)_i)^2$
-  - 交叉熵损失：$J = -sum y_i log(hat(y)_i)$
-  训练的目标是最小化代价函数，即找到使代价函数值最小的模型参数。
-
-  *5. 特征的分类*
-  特征根据其取值类型可分为：
-  - *离散特征*：取值有限个类别（如颜色：红/绿/蓝）
-  - *连续特征*：取值为实数（如温度：25.3°C）
-  根据特征对分类的重要性可分为：
-  - *相关特征*：对分类有信息量
-  - *无关特征*：对分类无帮助
-  - *冗余特征*：与其他特征的相关性高、可被替代
-]
-
 
 
 #example[作业题][
@@ -525,30 +520,7 @@ $ D_("KL"(P||Q)) = sum_i p_i log_2 p_i / q_i $
 ]
 
 #problemset[
-#example[2024期末考题 - 多类决策的线性判别函数拆分策略（10分）][
-  针对多类决策问题，请陈述线性判别函数的三种拆分策略，并讨论三种策略的优缺点。
-]
 
-#solution[
-  线性判别函数 $g_i(bold(x)) = bold(w)_i^T bold(x) + w_(i 0)$ 天然适用于二分类。对于 $K$ 类问题（$K > 2$），需拆分为多个二分类子问题。
-
-  *策略一：一对多（One-vs-Rest, OvR）*
-  - 为每个类别 $i$ 训练一个分类器，将该类视为正类，其余 $K-1$ 类视为负类
-  - 共需训练 $K$ 个分类器
-  - *优点*：分类器数量少（只需 $K$ 个），训练效率高
-  - *缺点*：样本不平衡（正类少、负类多）；存在不确定区域
-
-  *策略二：一对一（One-vs-One, OvO）*
-  - 每两个类别之间训练一个分类器
-  - 共需训练 $K(K-1)/2$ 个分类器
-  - *优点*：训练简单、平衡；*缺点*：预测慢、数量多
-
-  *策略三：多对多（Many-vs-Many, MvM）*
-  - 由ECOC编码决定正负类划分
-  - *优点*：鲁棒性强、有纠错能力；*缺点*：设计复杂
-
-  *关键点*：上述三种策略不仅适用于线性判别函数，所有二分类器扩展到多分类时都适用。
-]
 
   #example[作业题目][
   考虑如下训练样例集合，计算：
@@ -595,7 +567,7 @@ $ D_("KL"(P||Q)) = sum_i p_i log_2 p_i / q_i $
   因此存在被 $D_2$ 判为正类而不被 $D_1$ 判为正类的样本，$D_1$ 不满足 more-general-than $D_2$ 的定义。
 ]
 
-#example[2024期末考题 - 信息熵与KL散度计算][
+#exam[2024期末][
   设P的概率分布为 $[0.1, 0.3, 0.6]$，Q的概率分布为 $[0.1, 0.2, 0.7]$，求：
   
   (1) P和Q的信息熵
@@ -654,7 +626,7 @@ $ D_("KL"(P||Q)) = sum_i p_i log_2 p_i / q_i $
   5. *属性代价*：支持在属性选择时考虑属性的获取代价。
 ]
 
-#exam[2025期末考题 - 决策树后剪枝策略讨论（10分）][
+#exam[2025期末][
   叙述决策树的错误率降低修剪策略和规则后修剪策略，并讨论这两类后剪枝策略的优缺点。
 ]
 
@@ -696,7 +668,7 @@ $ D_("KL"(P||Q)) = sum_i p_i log_2 p_i / q_i $
   *总结*：后剪枝比预剪枝更可靠（不易欠拟合），但计算开销更大。错误率降低修剪和规则后修剪各有适用场景，通常选择哪种取决于对可解释性和计算效率的需求。
 ]
 
-#example[2024期末考题 - 决策树与信息增益计算（10分）][
+#exam[2024期末][
   下表给出的训练数据实例为蘑菇的形状(Shape)、颜色(Color)、气味(Odor)属性及目标属性"可食用"(Edible)：
 
   #align(center)[
@@ -751,16 +723,10 @@ $ D_("KL"(P||Q)) = sum_i p_i log_2 p_i / q_i $
   需继续计算其他属性的信息增益，选择根节点后递归构建。
 
   完整决策树（以 Odor 为根节点，因为其信息增益最大）：
-  ```
-              Odor
-         /      |      \
-       1(Yes)   2     3(No)
-              /   \
-          (Color) 
-          /   |   \
-         B    W    G
-      需要划分 Yes   No
-  ```
+  #figure(
+    fig_13(),
+    caption: "完整决策树示意图"
+  )
   Odor=2 下 Color=B 时 {5:Yes, 6:No} 需进一步按 Shape 划分。
 ]
 
@@ -787,48 +753,7 @@ $ D_("KL"(P||Q)) = sum_i p_i log_2 p_i / q_i $
 
 #figure(
   caption: [感知器结构],
-  cetz.canvas({
-    import cetz.draw: *
-    
-    // 输入节点
-    circle((-3, 1), radius: 0.3, fill: rgb("#e3f2fd"), stroke: 1pt)
-    circle((-3, 0), radius: 0.3, fill: rgb("#e3f2fd"), stroke: 1pt)
-    circle((-3, -1), radius: 0.3, fill: rgb("#e3f2fd"), stroke: 1pt)
-    content((-3, 1.6), [$x_1$])
-    content((-3, 0.6), [$x_2$])
-    content((-3, -0.4), [$x_3$])
-    content((-3, -1.4), [$dots.v$])
-    
-    // 权重标签
-    content((-1.8, 1.3), [$w_1$])
-    content((-1.8, 0.3), [$w_2$])
-    content((-1.8, -0.7), [$w_3$])
-    
-    // 连接线
-    line((-2.7, 1), (-0.8, 0), stroke: 1pt)
-    line((-2.7, 0), (-0.8, 0), stroke: 1pt)
-    line((-2.7, -1), (-0.8, 0), stroke: 1pt)
-    
-    // 求和节点
-    circle((0, 0), radius: 0.8, fill: rgb("#fff3e0"), stroke: 1.5pt)
-    content((0, 0), [$sum$])
-    
-    // 偏置输入
-    content((-1.5, -1.8), [$w_0$ (偏置)])
-    line((-1.2, -1.5), (-0.5, -0.5), stroke: 1pt)
-    
-    // 激活函数
-    content((1.2, 0), [$->$])
-    
-    // 输出
-    rect((1.8, -0.5), (3.2, 0.5), fill: rgb("#e8f5e9"), stroke: 1pt, radius: 0.1)
-    content((2.5, 0), [阶跃函数])
-    
-    // 最终输出
-    line((3.2, 0), (4, 0), stroke: 1pt)
-    circle((4.3, 0), radius: 0.3, fill: rgb("#ffcdd2"), stroke: 1pt)
-    content((4.3, 0), [$o$])
-  })
+  fig_12()
 )
 
 
@@ -1001,7 +926,7 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
 
 #problemset[
 
-#example[2024期末考题 - 神经元基本模型（10分）][
+#exam[2024期末][
   简述神经元的基本模型，并画出其原型图。
 ]
 
@@ -1022,18 +947,13 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
   - ReLU：$y = max(0, z)$
 
   *原型图（M-P神经元结构）*：
-  ```
-          x1 ---(w1)--\
-          x2 ---(w2)--+---> [Σ + b] ---> [激活函数 f] ---> 输出 y
-          x3 ---(w3)--/            ↑
-           ...                  偏置 b
-          xn ---(wn)--/
-  ```
+  #figure(
+    fig_12()
+  )
   
-  神经元模型是所有现代神经网络（MLP、CNN、RNN、Transformer等）的基础构件。
 ]
 
-#example[2025期末考题 - 感知器两种训练法则（20分）][
+#exam[2025期末][
   简述感知器神经元的两种训练法则即感知器法则和Delta法则，并陈述二者的关键区别。
 ]
 
@@ -1069,39 +989,6 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
   ]
 ]
 
-#example[2025期末考题 - 极大似然假设证明（二分类神经网络）（10分）][
-  针对二分类问题，训练神经网络使其输出预测概率，请证明如何使神经网络学习到极大似然假设。
-]
-
-#solution[
-  *问题设定*：
-  - 二分类任务，标签 $y in {0, 1}$
-  - 神经网络的输出 $hat(y) = h_bold(w)(x) in (0, 1)$，表示 $P(y=1 | x, bold(w))$
-
-  *证明*：
-  
-  *Step 1*：写出似然函数
-  对于单个样本 $(x, y)$，其条件概率为：
-  $ P(y | x, bold(w)) = hat(y)^y (1 - hat(y))^(1 - y) $
-  
-  对于 $m$ 个独立样本的训练集，似然函数为：
-  $ L(bold(w)) = product_(i=1)^m hat(y)_i^(y_i) (1 - hat(y)_i)^(1 - y_i) $
-
-  *Step 2*：取负对数似然（转化为最小化问题）
-  $ -"ln" L(bold(w)) = - sum_(i=1)^m [y_i "ln" hat(y)_i + (1 - y_i) "ln"(1 - hat(y)_i)] $
-
-  这正是*交叉熵损失函数（Cross-Entropy Loss）*：
-  $ J(bold(w)) = -1/m sum_(i=1)^m [y_i "ln" hat(y)_i + (1 - y_i) "ln"(1 - hat(y)_i)] $
-
-  *Step 3*：梯度下降训练
-  最小化 $J(bold(w))$ 即最大化似然函数，输出的神经网络参数 $bold(w)$ 即为极大似然估计。
-  
-  用链式法则求 $partial J / partial w_j$，得到梯度更新公式，迭代训练至收敛。
-
-  *结论*：
-  - 使用 *Sigmoid输出 + 交叉熵损失* = 极大似然估计
-  - 这是二分类神经网络的标准训练范式（而非直接最小化误差平方和）
-]
 
 ]
 
@@ -1307,7 +1194,7 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
 
   最终：$Delta w_i = eta sum_(d in D) (t_d - o_d) (x_i + x_i^2)$
 ]
-#example[2024期末考题 - 简答题综合（20分，每题4分）][
+#exam[2024期末][
   1. 简述 Find-S 算法的步骤
   2. 简述决策树算法的规则后修剪法的步骤
   3. 给出朴素贝叶斯分类器的计算公式
@@ -1344,28 +1231,6 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
   三种方式都是贪心策略，只能保证局部最优。
 ]
 
-#example[2024期末考题 - 遗传算法（10分）][
-  (1) 简述遗传算法的基本思想
-  (2) 解释"拥挤"的定义以及降低拥挤的策略
-]
-
-#solution[
-  *(1) 遗传算法的基本思想*
-  遗传算法（Genetic Algorithm, GA）模拟自然选择和遗传机制来搜索最优解：
-  - *编码*：将问题解编码为"染色体"（通常是二进制串）
-  - *适应度*：每个个体通过适应度函数评估优劣
-  - *进化过程*：通过选择、交叉、变异操作生成新一代种群
-  - *迭代*：不断进化直到满足终止条件（如达到最大代数或适应度收敛）
-
-  *(2) 拥挤的定义及降低策略*
-  *拥挤（Crowding）*：种群中个体过于相似，多样性降低，算法过早收敛到局部最优的现象。
-
-  *降低拥挤的策略*：
-  - *适应度共享（Fitness Sharing）*：降低密集区域个体的适应度，鼓励探索不同区域
-  - *小生境技术（Niching）*：将种群划分为多个子种群，各自独立进化
-  - *精英保留 + 多样化维持*：保留最优个体，同时引入变异保持多样性
-  - *拥挤度（Crowding Distance）*：衡量个体周围的密度，优先保留稀疏区域的个体（NSGA-II中使用）
-]
 
 #example[作业题][
   两层前馈 ANN：输入 $a, b$，隐藏单元 $c$，输出单元 $d$。五个权值 $(w_(c a), w_(c b), w_(c 0), w_(d c), w_(d 0))$ 初始化为 $(0.1, 0.1, 0.1, 0.1, 0.1)$。学习率 $eta = 0.3$，冲量 $alpha = 0.9$，增量更新，Sigmoid 激活。
@@ -1376,23 +1241,72 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
 ]
 
 #solution[
-  激活函数 $sigma(y) = 1/(1+e^(-y))$，$sigma'(y) = sigma(y)(1-sigma(y))$。
+*1. 神经网络结构说明*：
+本题为一个含有 1 个隐层单元和 1 个输出单元的前馈神经网络。结构如下图所示：
 
-  *第一次迭代（样例 a=1, b=0, target=1）*：
-  - 前向：$"net"_c = 0.1 times 1 + 0.1 times 0 + 0.1 = 0.2$，$o_c = sigma(0.2) approx 0.5498$
-  - $"net"_d = 0.1 times 0.5498 + 0.1 = 0.1550$，$o_d = sigma(0.1550) approx 0.5387$
-  - 反向误差：$delta_d = 0.5387 times 0.4613 times 0.4613 approx 0.1146$，$delta_c = 0.5498 times 0.4502 times (0.1 times 0.1146) approx 0.0028$
-  - 更新（初始动量为0）：$Delta w_(d 0) = 0.0344$，$Delta w_(d c) = 0.0189$，$Delta w_(c 0) = 0.0008$，$Delta w_(c a) = 0.0008$，$Delta w_(c b) = 0$
-  - *第一轮后权值*：$(0.1008, 0.1000, 0.1008, 0.1189, 0.1344)$
-
-  *第二次迭代（样例 a=0, b=1, target=0）*：
-  - 前向：$"net"_c = 0.2008$，$o_c approx 0.5501$；$"net"_d approx 0.1998$，$o_d approx 0.5498$
-  - 反向：$delta_d approx -0.1361$，$delta_c approx -0.0040$
-  - 含冲量更新 $Delta w(t) = eta delta x + alpha Delta w_(t-1)$：
-    $Delta w'_(d 0) approx -0.0098$，$Delta w'_(d c) approx -0.0055$，$Delta w'_(c 0) approx -0.0005$，$Delta w'_(c a) approx 0.0007$，$Delta w'_(c b) approx -0.0012$
-  - *第二轮后权值*：$(0.1015, 0.0988, 0.1003, 0.1134, 0.1246)$
+#align(center)[
+#import "@preview/fletcher:0.5.5" as fletcher: diagram, node, edge
+#diagram(
+  node-stroke: 0.7pt,
+  node-fill: white,
+  spacing: (2cm, 1.2cm),
+  node((0,0), [$a$], name: <a>),
+  node((0,1), [$b$], name: <b>),
+  node((0,2), [$1$ (偏置)], name: <b1>),
+  node((1,1), [$c$], name: <c>, fill: rgb("#e3f2fd")),
+  node((1,2), [$1$ (偏置)], name: <b2>),
+  node((2,1.5), [$d$], name: <d>, fill: rgb("#fff3e0")),
+  
+  edge(<a>, <c>, [ $w_(c a)$ ], "->", label-pos: 0.6, label-side: left),
+  edge(<b>, <c>, [ $w_(c b)$ ], "->", label-pos: 0.6, label-side: left),
+  edge(<b1>, <c>, [ $w_(c 0)$ ], "->", label-pos: 0.6, label-side: left),
+  edge(<c>, <d>, [ $w_(d c)$ ], "->", label-pos: 0.6, label-side: left),
+  edge(<b2>, <d>, [ $w_(d 0)$ ], "->", label-pos: 0.6, label-side: left),
+)
 ]
 
+*2. 参数与梯度更新公式*：
+- *激活函数*：Sigmoid 函数 $sigma(y) = 1 / (1 + e^(-y))$，其导数为 $sigma'(y) = sigma(y) (1 - sigma(y))$。
+- *误差误差反向传播 (MSE)*：
+  - 输出单元 $d$ 的误差效应项：$delta_d = o_d (1 - o_d) (t - o_d)$
+  - 隐层单元 $c$ 的误差效应项：$delta_c = o_c (1 - o_c) (w_(d c) dot delta_d)$
+- *含冲量的权重更新公式*：
+  $ Delta w(t) = eta dot delta dot x + alpha dot Delta w(t - 1) $
+  $ w(t + 1) = w(t) + Delta w(t) $
+  其中 $eta = 0.3$，$alpha = 0.9$。
+
+*3. 具体计算过程*：
+
+*第一次迭代（样例 $a=1, b=0, t=1$）*：
+- *前向计算*：
+  - $"net"_c = 0.1 times 1 + 0.1 times 0 + 0.1 = 0.2 arrow.r o_c = sigma(0.2) approx 0.5498$
+  - $"net"_d = 0.1 times 0.5498 + 0.1 = 0.1550 arrow.r o_d = sigma(0.1550) approx 0.5387$
+- *反向传播*：
+  - $delta_d = 0.5387 times (1 - 0.5387) times (1 - 0.5387) approx 0.1146$
+  - $delta_c = 0.5498 times (1 - 0.5498) times (0.1 times 0.1146) approx 0.0028$
+- *更新*（动量 $Delta w(0) = 0$）：
+  - $Delta w_(d 0) = 0.3 dot 0.1146 dot 1 + 0.9 dot 0 approx 0.0344$
+  - $Delta w_(d c) = 0.3 dot 0.1146 dot 0.5498 + 0.9 dot 0 approx 0.0189$
+  - $Delta w_(c 0) = 0.3 dot 0.0028 dot 1 + 0.9 dot 0 approx 0.0008$
+  - $Delta w_(c a) = 0.3 dot 0.0028 dot 1 + 0.9 dot 0 approx 0.0008$
+  - $Delta w_(c b) = 0.3 dot 0.0028 dot 0 + 0.9 dot 0 = 0$
+- *第一轮后权值*：$w = (0.1008, 0.1000, 0.1008, 0.1189, 0.1344)$
+
+*第二次迭代（样例 $a=0, b=1, t=0$）*：
+- *前向计算*：
+  - $"net"_c = 0.1008 times 0 + 0.1 times 1 + 0.1008 = 0.2008 arrow.r o_c approx 0.5500$
+  - $"net"_d = 0.1189 times 0.5500 + 0.1344 approx 0.1998 arrow.r o_d approx 0.5498$
+- *反向传播*：
+  - $delta_d = 0.5498 times (1 - 0.5498) times (0 - 0.5498) approx -0.1361$
+  - $delta_c = 0.5500 times (1 - 0.5500) times (0.1189 times -0.1361) approx -0.0040$
+- *含冲量更新*：
+  - $Delta w_(d 0) = 0.3 dot (-0.1361) dot 1 + 0.9 dot 0.0344 approx -0.0100$
+  - $Delta w_(d c) = 0.3 dot (-0.1361) dot 0.5500 + 0.9 dot 0.0189 approx -0.0055$
+  - $Delta w_(c 0) = 0.3 dot (-0.0040) dot 1 + 0.9 dot 0.0008 approx -0.0005$
+  - $Delta w_(c a) = 0.3 dot (-0.0040) dot 0 + 0.9 dot 0.0008 approx 0.0007$
+  - $Delta w_(c b) = 0.3 dot (-0.0040) dot 1 + 0.9 dot 0 approx -0.0012$
+- *第二轮后权值*：$w approx (0.1015, 0.0988, 0.1003, 0.1134, 0.1244)$
+]
 
 
 #pagebreak()
@@ -1800,11 +1714,87 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
   这正是二分类问题的*交叉熵损失函数*。证明完毕。
 ]
 ]
+#exam[2025期末][
+  针对二分类问题，训练神经网络使其输出预测概率，请证明如何使神经网络学习到极大似然假设。
+]
 
+#solution[
+  *问题设定*：
+  - 二分类任务，标签 $y in {0, 1}$
+  - 神经网络的输出 $hat(y) = h_bold(w)(x) in (0, 1)$，表示 $P(y=1 | x, bold(w))$
 
+  *证明*：
+  
+  *Step 1*：写出似然函数
+  对于单个样本 $(x, y)$，其条件概率为：
+  $ P(y | x, bold(w)) = hat(y)^y (1 - hat(y))^(1 - y) $
+  
+  对于 $m$ 个独立样本的训练集，似然函数为：
+  $ L(bold(w)) = product_(i=1)^m hat(y)_i^(y_i) (1 - hat(y)_i)^(1 - y_i) $
+
+  *Step 2*：取负对数似然（转化为最小化问题）
+  $ -"ln" L(bold(w)) = - sum_(i=1)^m [y_i "ln" hat(y)_i + (1 - y_i) "ln"(1 - hat(y)_i)] $
+
+  这正是*交叉熵损失函数（Cross-Entropy Loss）*：
+  $ J(bold(w)) = -1/m sum_(i=1)^m [y_i "ln" hat(y)_i + (1 - y_i) "ln"(1 - hat(y)_i)] $
+
+  *Step 3*：梯度下降训练
+  最小化 $J(bold(w))$ 即最大化似然函数，输出的神经网络参数 $bold(w)$ 即为极大似然估计。
+  
+  用链式法则求 $partial J / partial w_j$，得到梯度更新公式，迭代训练至收敛。
+
+  *结论*：
+  - 使用 *Sigmoid输出 + 交叉熵损失* = 极大似然估计
+  - 这是二分类神经网络的标准训练范式（而非直接最小化误差平方和）
+]
+
+#exam[2024期末 - MSE最小化与极大似然假设证明（10分）][
+  证明：任一学习算法如果使输出的假设预测和训练数据之间的误差平方最小化，它将输出一极大似然假设。
+  
+  *假定*：训练样本的目标值被正态分布随机噪声干扰。
+  
+  已知 $X ~ "N"(mu, sigma^2)$，其概率密度函数为：
+  $ f(x; mu, sigma^2) = 1 / (sqrt(2 pi) sigma) e^(-(x - mu)^2 / (2 sigma^2)) $
+  
+  似然函数：
+  $ L(mu, sigma^2) = product_(i=1)^m 1 / (sqrt(2 pi) sigma) e^(-(x_i - mu)^2 / (2 sigma^2)) $
+]
+
+#solution[
+  *证明思路*：最小化误差平方和 $<=>$ 最大化在正态噪声假设下的似然函数。
+
+  *Step 1*：写出似然函数
+  
+  对于 $m$ 个独立同分布的训练样本 ${(x_i, y_i)}$，假设目标值 $y_i$ 与真实函数 $f(x_i)$ 之间存在高斯噪声 $epsilon_i ~ "N"(0, sigma^2)$：
+  $ y_i = f(x_i) + epsilon_i $
+  
+  因此 $y_i$ 服从以 $f(x_i)$ 为均值、$sigma^2$ 为方差的正态分布：
+  $ P(y_i | x_i, h) = 1 / (sqrt(2 pi) sigma) e^(-(y_i - h(x_i))^2 / (2 sigma^2)) $
+
+  训练数据的似然函数（对 $i=1..m$ 相乘）：
+  $ L(h) = product_(i=1)^m 1 / (sqrt(2 pi) sigma) e^(-(y_i - h(x_i))^2 / (2 sigma^2)) $
+
+  *Step 2*：取对数似然
+  $ 
+  "ln" L(h) = sum_(i=1)^m "ln"(1 / (sqrt(2 pi) sigma)) - sum_(i=1)^m (y_i - h(x_i))^2 / (2 sigma^2)
+  $
+  $ 
+  = m "ln"(1 / (sqrt(2 pi) sigma)) - 1 / (2 sigma^2) sum_(i=1)^m (y_i - h(x_i))^2
+  $
+
+  *Step 3*：最大化对数似然
+  由于第一项 $m "ln"(1/(sqrt(2 pi) sigma))$ 是与假设 $h$ 无关的常数，最大化 $"ln" L(h)$ 等价于最小化：
+  $ J(h) = sum_(i=1)^m (y_i - h(x_i))^2 $
+
+  这正是误差平方和（SSE）！
+
+  *结论*：在高斯噪声假设下，最小化误差平方和等价于最大化似然函数，因此输出的假设是极大似然假设（ML假设），即 $h_"ML" = "argmax"_h L(h)$。
+
+  *关键点*：噪声服从正态分布是"最小二乘法等价于极大似然估计"的前提条件。若噪声服从其他分布（如拉普拉斯分布），则最小化误差绝对值而非平方和。
+]
 
 #pagebreak(weak: true)
- = 基于实例的学习
+= 基于实例的学习
 
 #introduction[K近邻][局部加权回归][惰性学习]
 
@@ -2307,7 +2297,7 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
 ]
 
 #problemset[
-#example[2025期末考题 - 径向基函数假设表示与网络结构（10分）][
+#example[2025期末][
   请写出径向基函数的假设表示，并画出对应的两层网络结构。
 ]
 
@@ -2317,7 +2307,7 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
   使用高斯核作为基函数：$K(d) = exp(-d^2 / (2 sigma^2))$
 
   *假设表示*：
-  $ hat(f)(x) = sum_(i=1)^k w_i exp(-||x - mu_i||^2 / (2 sigma_i^2)) $
+  $ hat(f)(x) = sum_(i=1)^k w_i exp(-(||x - mu_i||^2) / (2 sigma_i^2)) $
   其中：
   - $mu_i$ 为第 $i$ 个基函数的中心（由训练数据确定）
   - $sigma_i$ 为宽度参数
@@ -2337,7 +2327,7 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
    ...    [φ₃(r₃)] ──/
   xD ──/
   ```
-  其中 $phi_i(x) = exp(-||x - mu_i||^2 / (2 sigma_i^2))$
+  其中 $phi_i(x) = exp(-(||x - mu_i||^2 )/ (2 sigma_i^2))$
 
   *学习方式*：RBF网络是*积极学习*（非惰性），需要训练阶段确定中心和权重。
 ]
@@ -2853,7 +2843,7 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
 ]
 
 #problemset[
-#example[2025期末考题 - 遗传算法流程（10分）][
+#exam[2025期末][
   请用流程图或算法语言描述遗传算法的算法流程。
 ]
 
@@ -3033,8 +3023,29 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
 ]
 ]
 
+#exam[2024期末][
+  (1) 简述遗传算法的基本思想
+  (2) 解释"拥挤"的定义以及降低拥挤的策略
+]
 
-#example[课题设计 - 基于轮盘赌选择的TSP遗传算法求解流程][
+#solution[
+  *(1) 遗传算法的基本思想* \
+  遗传算法（Genetic Algorithm, GA）模拟自然选择和遗传机制来搜索最优解：
+  - *编码*：将问题解编码为"染色体"（通常是二进制串）
+  - *适应度*：每个个体通过适应度函数评估优劣
+  - *进化过程*：通过选择、交叉、变异操作生成新一代种群
+  - *迭代*：不断进化直到满足终止条件（如达到最大代数或适应度收敛）
+
+  *(2) 拥挤的定义及降低策略* \
+  *拥挤（Crowding）*：种群中个体过于相似，多样性降低，算法过早收敛到局部最优的现象。
+
+  *降低拥挤的策略*：
+  - *适应度共享（Fitness Sharing）*：降低密集区域个体的适应度，鼓励探索不同区域
+  - *小生境技术（Niching）*：将种群划分为多个子种群，各自独立进化
+  - *精英保留 + 多样化维持*：保留最优个体，同时引入变异保持多样性
+  - *拥挤度（Crowding Distance）*：衡量个体周围的密度，优先保留稀疏区域的个体（NSGA-II中使用）
+]
+#example[课堂回顾习题][
   旅行商问题（TSP）是一个典型的组合优化问题，其目标是寻找遍历所有城市且总距离最短的路径。由于该问题属于最小化优化，在利用遗传算法（GA）中的轮盘赌机制进行选择时，需要构建合理的数学模型与操作步骤。
 
   请设计该算法的编码、适应度函数转换方式、轮盘赌选择的具体数学描述以及完整的算法迭代流程。
@@ -3079,7 +3090,7 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
   轮盘赌选择在算法迭代过程中用于挑选亲代个体，进而通过交叉（如顺序交叉 OX）和变异（如变异算子 Swap）产生子代。流程如下：
 
   #align(center)[
-    fig_6()
+    #fig_6()
   ]
 ]
 
@@ -3118,14 +3129,14 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
 
 #definition[单变量线性回归模型][
   假设回归模型为线性函数：
-  $ h_theta(x) = theta_0 + theta_1 x $
+  $ h_theta (x) = theta_0 + theta_1 x $
 
-  其中 $x$ 为特征（如房屋面积），$h_theta(x)$ 为预测值（如房价）。
+  其中 $x$ 为特征（如房屋面积），$h_theta (x)$ 为预测值（如房价）。
 ]
 
 #definition[代价函数 (Cost Function)][
   评价假设好坏的指标——拟合误差越小越好：
-  $ J(theta_0, theta_1) = 1/(2m) sum_(i=1)^m (h_theta(x^((i))) - y^((i)))^2 $
+  $ J(theta_0, theta_1) = 1/(2m) sum_(i=1)^m (h_theta (x^((i))) - y^((i)))^2 $
 
   其中 $m$ 为训练样例数量，系数 $1/2$ 是为了后续求导方便。
 ]
@@ -3186,8 +3197,8 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
   $ theta_j := theta_j - eta frac(partial J, partial theta_j) $
 
   对线性回归展开：
-  $ theta_0 := theta_0 - eta/m sum_(i=1)^m (h_theta(x^((i))) - y^((i))) $
-  $ theta_1 := theta_1 - eta/m sum_(i=1)^m (h_theta(x^((i))) - y^((i))) dot x^((i)) $
+  $ theta_0 := theta_0 - eta/m sum_(i=1)^m (h_theta (x^((i))) - y^((i))) $
+  $ theta_1 := theta_1 - eta/m sum_(i=1)^m (h_theta (x^((i))) - y^((i))) dot x^((i)) $
 ]
 
 #property[梯度下降关键点][
@@ -3231,14 +3242,14 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
 #definition[逻辑回归模型][
   使用Sigmoid函数将线性输出映射到 $(0,1)$ 区间，可视为分类概率：
 
-  $ h_theta(x) = sigma(theta^T x) = 1 / (1 + e^(-theta^T x)) $
+  $ h_theta (x) = sigma(theta^T x) = 1 / (1 + e^(-theta^T x)) $
 ]
 
 #figure(
   caption: [Sigmoid函数（Logistic函数）图像],
   cetz.canvas({
     import cetz.draw: *
-    line((-0.5, 0), (5.5, 0), stroke: 1pt, mark: (end: ">"))
+    line((-5, 0), (5.5, 0), stroke: 1pt, mark: (end: ">"))
     line((0, -0.5), (0, 3), stroke: 1pt, mark: (end: ">"))
     content((5.8, 0), [$z$])
     content((0, 3.3), [$g(z)$])
@@ -3259,9 +3270,9 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
     // 渐近线标注
     content((-0.3, 2.45), [$1$])
     content((-0.3, 0.0), [$0$])
-    line((-0.3, 2.5), (5.5, 2.5), stroke: (paint: rgb("#9e9e9e"), dash: "dashed"))
+    line((-5, 2.5), (5.5, 2.5), stroke: (paint: rgb("#9e9e9e"), dash: "dashed"))
     content((5.2, 0.1), [$0.5$])
-    line((-0.3, 1.25), (5.5, 1.25), stroke: (paint: rgb("#9e9e9e"), dash: "dashed"))
+    line((-5, 1.25), (5.5, 1.25), stroke: (paint: rgb("#9e9e9e"), dash: "dashed"))
   })
 )
 
@@ -3277,7 +3288,7 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
   - 逻辑回归本质上是一个线性回归模型 + Sigmoid映射
   - 除Sigmoid外，其他步骤和算法都与线性回归一致
   - Sigmoid函数对离群点带来的偏差有一定的抑制作用
-  - 输出 $h_theta(x)$ 可解释为 $P(y=1|x)$ — 分类为1的概率
+  - 输出 $h_theta (x)$ 可解释为 $P(y=1|x)$ — 分类为1的概率
   - *非线性扩展*：引入高阶项（如 $x_1^2, x_1 x_2$）可实现非线性分类
 ]
 
@@ -3285,11 +3296,11 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
 
 #definition[概率输出解释][
   对于输入 $x$，分类结果为类别1和类别0的概率分别为：
-  $ P(y=1|x; theta) = h_theta(x) $
-  $ P(y=0|x; theta) = 1 - h_theta(x) $
+  $ P(y=1|x; theta) = h_theta (x) $
+  $ P(y=0|x; theta) = 1 - h_theta (x) $
 
   统一写作：
-  $ P(y|x; theta) = h_theta(x)^y (1 - h_theta(x))^(1-y) $
+  $ P(y|x; theta) = h_theta (x)^y (1 - h_theta (x))^(1-y) $
 ]
 
 == 交叉熵损失函数推导
@@ -3298,13 +3309,13 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
   基于极大似然估计（MLE）推导：
 
   似然函数：
-  $ P(D|h) = product_(i=1)^m h_theta(x^((i)))^(y^((i))) (1 - h_theta(x^((i))))^(1-y^((i))) $
+  $ P(D|h) = product_(i=1)^m h_theta (x^((i)))^(y^((i))) (1 - h_theta (x^((i))))^(1-y^((i))) $
 
   取对数：
-  $ ell(theta) = sum_(i=1)^m [y^((i)) log h_theta(x^((i))) + (1-y^((i))) log(1-h_theta(x^((i))))] $
+  $ ell(theta) = sum_(i=1)^m [y^((i)) log h_theta (x^((i))) + (1-y^((i))) log(1-h_theta (x^((i))))] $
 
   最大化似然等价于最小化负对数似然（交叉熵损失）：
-  $ J(theta) = - 1/m sum_(i=1)^m [y^((i)) log h_theta(x^((i))) + (1-y^((i))) log(1-h_theta(x^((i))))] $
+  $ J(theta) = - 1/m sum_(i=1)^m [y^((i)) log h_theta (x^((i))) + (1-y^((i))) log(1-h_theta (x^((i))))] $
 ]
 
 == 逻辑回归的梯度下降求解
@@ -3312,12 +3323,12 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
 #definition[梯度下降更新规则][
   利用 $sigma'(z) = sigma(z)(1-sigma(z))$ 推导梯度：
 
-  $ frac(partial J, partial theta_j) = 1/m sum_(i=1)^m (h_theta(x^((i))) - y^((i))) x_j^((i)) $
+  $ frac(partial J, partial theta_j) = 1/m sum_(i=1)^m (h_theta (x^((i))) - y^((i))) x_j^((i)) $
 
   *参数更新*：
-  $ theta_j := theta_j - eta/m sum_(i=1)^m (h_theta(x^((i))) - y^((i))) x_j^((i)) $
+  $ theta_j := theta_j - eta/m sum_(i=1)^m (h_theta (x^((i))) - y^((i))) x_j^((i)) $
 
-  形式上与线性回归完全一致，区别在于 $h_theta(x)$ 不同（线性 vs Sigmoid）。
+  形式上与线性回归完全一致，区别在于 $h_theta (x)$ 不同（线性 vs Sigmoid）。
 ]
 
 #example[决策边界示例][
@@ -3456,20 +3467,20 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
 ]
 
 #solution[
-  设 $h_theta(x) = sigma(theta^T x) = 1/(1 + e^(-theta^T x))$，交叉熵代价函数：
-  $ J(theta) = - 1/m sum_(i=1)^m [y_i log(h_theta(x_i)) + (1 - y_i) log(1 - h_theta(x_i))] $
+  设 $h_theta (x) = sigma(theta^T x) = 1/(1 + e^(-theta^T x))$，交叉熵代价函数：
+  $ J(theta) = - 1/m sum_(i=1)^m [y_i log(h_theta (x_i)) + (1 - y_i) log(1 - h_theta(x_i))] $
 
   记 $a_i = h(x_i)$，利用 $sigma'(z) = sigma(z)(1-sigma(z))$：
 
   $ frac(partial J, partial theta_j) = - 1/m sum_(i=1)^m [y_i/a_i frac(partial a_i, partial theta_j) + (1-y_i)/(1-a_i)(-frac(partial a_i, partial theta_j))] $
 
-  其中 $frac(partial a_i, partial theta_j) = a_i(1-a_i) x_(i j)$
+  其中 $frac(partial a_i, partial theta_j) = a_i (1-a_i) x_(i j)$
 
-  $ = - 1/m sum_(i=1)^m [y_i/a_i - (1-y_i)/(1-a_i)] dot a_i(1-a_i) x_(i j) $
+  $ = - 1/m sum_(i=1)^m [y_i/a_i - (1-y_i)/(1-a_i)] dot a_i (1-a_i) x_(i j) $
 
-  $ = - 1/m sum_(i=1)^m frac(y_i - a_i, a_i(1-a_i)) dot a_i(1-a_i) x_(i j) = 1/m sum_(i=1)^m (a_i - y_i) x_(i j) $
+  $ = - 1/m sum_(i=1)^m frac(y_i - a_i, a_i (1-a_i)) dot a_i (1-a_i) x_(i j) = 1/m sum_(i=1)^m (a_i - y_i) x_(i j) $
 
-  即：$ gradient J = 1/m sum_(i=1)^m (h_theta(x_i) - y_i) x_i $
+  即：$ gradient J = 1/m sum_(i=1)^m (h_theta (x_i) - y_i) x_i $
 ]
 
 #example[作业 - 推导 Softmax 回归梯度][
@@ -3516,7 +3527,11 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
   更新后：$h(x) = 0.3 + 1.6 times 2 = 3.5$（更接近目标值5）。
 ]
 
-#example[2024期末考题 - 线性回归梯度下降推导][
+
+
+
+
+#exam[2024期末][
   线性回归使用误差平方和作为损失函数，目标值 $y$，输入向量 $x$。请：
   
   (1) 写出误差平方和的表达式
@@ -3529,34 +3544,34 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
 #solution[
   *(1) 误差平方和（SSE）表达式*
   
-  对于 $m$ 个训练样本，线性回归模型为：$h_theta(x) = theta^T x = w_0 + w_1 x_1 + ... + w_n x_n$
+  对于 $m$ 个训练样本，线性回归模型为：$h_theta (x) = theta^T x = w_0 + w_1 x_1 + ... + w_n x_n$
   
-  误差平方和：$J(theta) = sum_(i=1)^m (h_theta(x^((i))) - y^((i)))^2$
+  误差平方和：$J(theta) = sum_(i=1)^m (h_theta (x^((i))) - y^((i)))^2$
   
-  或带系数形式：$J(theta) = 1/(2m) sum_(i=1)^m (h_theta(x^((i))) - y^((i)))^2$
+  或带系数形式：$J(theta) = 1/(2m) sum_(i=1)^m (h_theta (x^((i))) - y^((i)))^2$
   
   *(2) 梯度计算与参数更新推导*
   
-  对于单个样本，误差：$E = 1/2 (h_theta(x) - y)^2$
+  对于单个样本，误差：$E = 1/2 (h_theta (x) - y)^2$
   
   对参数 $theta_j$ 求偏导：
   
-  $ frac(partial E, partial theta_j) = (h_theta(x) - y) dot frac(partial, partial theta_j)(h_theta(x) - y) $
+  $ frac(partial E, partial theta_j) = (h_theta (x) - y) dot frac(partial, partial theta_j)(h_theta (x) - y) $
   
-  由于 $h_theta(x) = theta_0 + theta_1 x_1 + ... + theta_j x_j + ...$
+  由于 $h_theta (x) = theta_0 + theta_1 x_1 + ... + theta_j x_j + ...$
   
-  所以 $frac(partial h_theta(x), partial theta_j) = x_j$
+  所以 $frac(partial h_theta (x), partial theta_j) = x_j$
   
-  因此：$ frac(partial E, partial theta_j) = (h_theta(x) - y) x_j $
+  因此：$ frac(partial E, partial theta_j) = (h_theta (x) - y) x_j $
   
   *批量梯度下降更新规则*：
   
-  $ theta_j := theta_j - eta frac(partial J, partial theta_j) = theta_j - eta/m sum_(i=1)^m (h_theta(x^((i))) - y^((i))) x_j^((i)) $
+  $ theta_j := theta_j - eta frac(partial J, partial theta_j) = theta_j - eta/m sum_(i=1)^m (h_theta (x^((i))) - y^((i))) x_j^((i)) $
   
   其中 $eta$ 为学习率。
 ]
 
-#example[2024期末考题 - 多项式回归与MSE计算][
+#exam[2024期末][
   多项式回归使用适当阶数的多项式拟合数据。已知最终得到的多项式为 $y = 0.8x^2$，求下表测试集样本的均方误差（MSE）。
   
   #align(center)[
@@ -3593,7 +3608,7 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
   $= 1/2 [(2.0)^2 + (2.0)^2] = 1/2 [4 + 4] = 4.0$
 ]
 
-#example[2024期末考题 - 逻辑回归与Sigmoid函数][
+#exam[2024期末][
   逻辑回归使用Sigmoid函数将线性回归的结果映射到0-1之间，概率表征样本属于正类的可能性。请：
   
   (1) 写出Sigmoid函数表达式
@@ -3627,19 +3642,18 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
       [输出解释], [目标值的预测], [属于正类的概率 $P(y=1|x)$],
       [损失函数], [均方误差（MSE）], [交叉熵损失（Cross-Entropy）],
       [激活函数], [无（直接输出）], [Sigmoid函数],
-      [应用场景], [房价预测、股票预测等], [二分类问题（垃圾邮件、肿瘤诊断等）],
     )
   ]
 ]
 ]
 
 
-#exam[2025期末考题 - 线性回归最小二乘法（10分）][
+#exam[2025期末][
   某研究机构对高三学生的记忆力 $x$ 和判断力 $y$ 进行统计分析，得下表数据：
 
   #align(center)[
     #table(
-      columns: (auto, auto, auto, auto),
+      columns: (auto, auto, auto, auto, auto),
       inset: 5pt, align: center,
       table.header([$x$], [6], [8], [10], [12]),
       [$y$], [2], [3], [5], [6],
@@ -3665,23 +3679,23 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
 
   计算各统计量：
 
-  $ bar(x) = (6 + 8 + 10 + 12) / 4 = 36 / 4 = 9 $
-  $ bar(y) = (2 + 3 + 5 + 6) / 4 = 16 / 4 = 4 $
+  $ overline(x) = (6 + 8 + 10 + 12) / 4 = 36 / 4 = 9 $
+  $ overline(y) = (2 + 3 + 5 + 6) / 4 = 16 / 4 = 4 $
 
   计算分子（协方差）：
-  $ sum_(i=1)^4 (x_i - bar(x))(y_i - bar(y)) = (6-9)(2-4) + (8-9)(3-4) + (10-9)(5-4) + (12-9)(6-4) $
+  $ sum_(i=1)^4 (x_i - overline(x))(y_i - overline(y)) = (6-9)(2-4) + (8-9)(3-4) + (10-9)(5-4) + (12-9)(6-4) $
   $ = (-3)(-2) + (-1)(-1) + (1)(1) + (3)(2) $
   $ = 6 + 1 + 1 + 6 = 14 $
 
   计算分母（方差）：
-  $ sum_(i=1)^4 (x_i - bar(x))^2 = (6-9)^2 + (8-9)^2 + (10-9)^2 + (12-9)^2 $
+  $ sum_(i=1)^4 (x_i - overline(x))^2 = (6-9)^2 + (8-9)^2 + (10-9)^2 + (12-9)^2 $
   $ = 9 + 1 + 1 + 9 = 20 $
 
   回归系数：
-  $ b = (sum (x_i - bar(x))(y_i - bar(y))) / (sum (x_i - bar(x))^2) = 14 / 20 = 0.7 $
+  $ b = (sum (x_i - overline(x))(y_i - overline(y))) / (sum (x_i - overline(x))^2) = 14 / 20 = 0.7 $
 
   截距：
-  $ a = bar(y) - b dot bar(x) = 4 - 0.7 times 9 = 4 - 6.3 = -2.3 $
+  $ a = overline(y) - b dot overline(x) = 4 - 0.7 times 9 = 4 - 6.3 = -2.3 $
 
   *线性回归方程*：
   $ y = 0.7 x - 2.3 $
@@ -3736,7 +3750,7 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
 
 #definition[增广形式][
   将偏置纳入向量，得到齐次形式：
-  $ bold(y) = (1, x_1, x_2, ..., x_d)^T $，$ bold(a) = (w_0, w_1, w_2, ..., w_d)^T $
+  $ bold(y) = (1, x_1, x_2, ..., x_d)^T $ $ bold(a) = (w_0, w_1, w_2, ..., w_d)^T $
   
   则：$ g(bold(x)) = bold(a)^T bold(y) $
 ]
@@ -3745,29 +3759,29 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
   - *决策面方程*：$g(bold(x)) = 0$ 是一个超平面 $H$
   - *法向量*：$bold(w)$ 是决策面 $H$ 的法向量，方向指向 $C_1$ 类（正侧）
   - *$g(x)$的代数意义*：正比于点 $x$ 到决策面的有向距离
-  - *有向距离公式*：$ g(bold(x)) = r ||bold(w)|| $，其中 $r$ 是有向距离
-  - *原点到决策面距离*：$ r_0 = w_0 / ||bold(w)|| $（$w_0 = 0$ 时决策面过原点）
+  - *有向距离公式*：$ g(bold(x)) = r ||bold(w)|| $其中 $r$ 是有向距离
+  - *原点到决策面距离*：$ r_0 = w_0 / (||bold(w)||) $（$w_0 = 0$ 时决策面过原点）
 
-  #align(center)[
+  
     线性分类界面是 $d$ 维空间中的一个超平面。判别函数的权向量 $bold(w)$ 垂直于分类界面，方向指向 $C_1$ 区域。偏置 $w_0$ 与原点到分类界面的距离有关。
-  ]
+  
 ]
 
 == 最小距离准则
 
 #definition[最小距离分类器][
   同类模式在模式空间中应相互靠近。设有 $m$ 类样本集，计算 $omega_i$ 类中所有样本的均值 $bold(mu)_i$，样本 $bold(x)$ 到 $omega_i$ 类的欧氏距离为：
-  $ D_i(bold(x)) = (bold(x) - bold(mu)_i)^T (bold(x) - bold(mu)_i) $
+  $ D_i (bold(x)) = (bold(x) - bold(mu)_i)^T (bold(x) - bold(mu)_i) $
 
-  *决策规则*：若 $D_i(x) < D_j(x)$ 对所有 $j != i$ 成立，则判 $x$ 属于 $omega_i$ 类。
+  *决策规则*：若 $D_i (x) < D_j (x)$ 对所有 $j != i$ 成立，则判 $x$ 属于 $omega_i$ 类。
 ]
 
 #theorem[最小距离分类器是线性分类器][
   展开距离公式：
-  $ D_i(x) = x^T x - 2 bold(mu)_i^T x + bold(mu)_i^T bold(mu)_i $
+  $ D_i (x) = x^T x - 2 bold(mu)_i^T x + bold(mu)_i^T bold(mu)_i $
 
   由于 $x^T x$ 与类别无关，可定义线性判别函数：
-  $ g_i(x) = 2 bold(mu)_i^T x - bold(mu)_i^T bold(mu)_i = bold(w)^T x + w_0 $
+  $ g_i (x) = 2 bold(mu)_i^T x - bold(mu)_i^T bold(mu)_i = bold(w)^T x + w_0 $
 
   其中 $bold(w) = 2 bold(mu)_i$，$w_0 = - bold(mu)_i^T bold(mu)_i$
 ]
@@ -3856,7 +3870,7 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
 
 #theorem[MSE解（伪逆解）][
   令梯度为0：
-  $ nabla J(bold(w)) = 2 Y^T(Y bold(w) - bold(b)) = 0 $
+  $ nabla J(bold(w)) = 2 Y^T (Y bold(w) - bold(b)) = 0 $
 
   得正规方程：$ Y^T Y bold(w) = Y^T bold(b) $
 
@@ -3873,11 +3887,11 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
 ]
 
 #definition[Widrow-Hoff算法（迭代MSE）][
-  MSE准则函数的梯度：$ nabla J(bold(w)) = 2 Y^T(Y bold(w) - bold(b)) $
+  MSE准则函数的梯度：$ nabla J(bold(w)) = 2 Y^T (Y bold(w) - bold(b)) $
 
   梯度下降迭代：
   $ bold(w)_1 = "任意值" $
-  $ bold(w)_(k+1) = bold(w)_k - rho_k Y^T(Y bold(w)_k - bold(b)) $
+  $ bold(w)_(k+1) = bold(w)_k - rho_k Y^T (Y bold(w)_k - bold(b)) $
 
   其中 $rho_k = rho_1/k$（随迭代递减），$rho_1$ 取任意值。
 
@@ -3903,10 +3917,10 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
 ]
 
 #definition[多对多 / 最大值判别 (arg max)][
-  定义 $m$ 个判别函数 $d_i(x)$（$i = 1, ..., m$），决策面为 $d_i(x) = d_j(x)$。
+  定义 $m$ 个判别函数 $d_i (x)$（$i = 1, ..., m$），决策面为 $d_i (x) = d_j (x)$。
   
-  *判别规则*：若 $d_i(x) > d_j(x)$ 对所有 $j != i$ 成立，则判为 $omega_i$ 类，即：
-  $ "class" = arg max_i d_i(x) $
+  *判别规则*：若 $d_i (x) > d_j (x)$ 对所有 $j != i$ 成立，则判为 $omega_i$ 类，即：
+  $ "class" = arg max_i d_i (x) $
   
   *优点*：不存在不确定区域，是最常用的多类分类方案。
 ]
@@ -3928,6 +3942,33 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
 
 #problemset[
 
+
+#exam[2024期末][
+  针对多类决策问题，请陈述线性判别函数的三种拆分策略，并讨论三种策略的优缺点。
+]
+
+#solution[
+  线性判别函数 $g_i (bold(x)) = bold(w)_i^T bold(x) + w_(i 0)$ 天然适用于二分类。对于 $K$ 类问题（$K > 2$），需拆分为多个二分类子问题。
+
+  *策略一：一对多（One-vs-Rest, OvR）*
+  - 为每个类别 $i$ 训练一个分类器，将该类视为正类，其余 $K-1$ 类视为负类
+  - 共需训练 $K$ 个分类器
+  - *优点*：分类器数量少（只需 $K$ 个），训练效率高
+  - *缺点*：样本不平衡（正类少、负类多）；存在不确定区域
+
+  *策略二：一对一（One-vs-One, OvO）*
+  - 每两个类别之间训练一个分类器
+  - 共需训练 $K(K-1)/2$ 个分类器
+  - *优点*：训练简单、平衡；*缺点*：预测慢、数量多
+
+  *策略三：多对多（Many-vs-Many, MvM）*
+  - 由ECOC编码决定正负类划分
+  - *优点*：鲁棒性强、有纠错能力；*缺点*：设计复杂
+
+  *关键点*：上述三种策略不仅适用于线性判别函数，所有二分类器扩展到多分类时都适用。
+]
+
+
 #example[作业 - 线性判别函数基本形式][
   对二维线性判别函数 $g(x) = x_1 + 2x_2 - 2$：(1) 写成 $g(x) = bold(w)^T bold(x) + w_0$ 形式；(2) 写成 $g(x) = bold(a)^T bold(y)$ 增广形式并画图。
 ]
@@ -3939,6 +3980,21 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
 
   *(2)* 增广特征 $bold(y) = (x_1, x_2, 1)^T$，增广权向量 $bold(a) = (1, 2, -2)^T$：
   $g(x) = mat(1, 2, -2) mat(x_1; x_2; 1) = bold(a)^T bold(y)$
+
+  #align(center, cetz.canvas({
+    import cetz.draw: *
+    // 绘制坐标轴
+    line((-1, 0), (3, 0), mark: (end: ">"))
+    line((0, -1), (0, 2), mark: (end: ">"))
+    
+    // 绘制直线
+    line((-0.5, 1.25), (2.5, -0.25), stroke: blue + 1.5pt)
+    
+    // 标注
+    content((2.5, -0.5), [$x_1$])
+    content((-0.3, 2), [$x_2$])
+    content((1.5, 0.8), [$g(x)=0$])
+  }))
 ]
 
 #example[作业 - 多类判别函数计算][
@@ -3966,8 +4022,8 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
   
   最小距离为 $D_1 = 0.25$，所以 $x$ 属于 $omega_1$ 类。
 
-  对应的线性判别函数：
-  $ g_1(x) = 2 mu_1^T x - mu_1^T mu_1 = 0 $
+  线性判别函数为 $ g(x) = 2 mu_1^T x - mu_1^T mu_1 $对应的线性判别函数：
+  $ g_1(x) = 0 $
   $ g_2(x) = 2 x_1 - 1 $
   $ g_3(x) = 2 x_2 - 1 $
 ]
@@ -4014,7 +4070,7 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
   所以MSE解为 $bold(w) = (1, -1)^T$。
 ]
 
-#example[2024期末考题 - SVM超平面与支持向量][
+#exam[2024期末][
   下图为二维特征空间的二分类数据点分布图，使用完全线性可分情况下的SVM，结合图中信息，分别解释：
   
   (1) 超平面（分离超平面）
@@ -4040,7 +4096,13 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
   - 正类区域：$bold(w)^T bold(x) + b > 0$
   - 负类区域：$bold(w)^T bold(x) + b < 0$
   
+  硬间隔 SVM 额外满足约束：
+  - 对正类样本：$bold(w)^T bold(x) + b >= 1$
+  - 对负类样本：$bold(w)^T bold(x) + b <= -1$
+
   SVM的目标是找到*最优分离超平面*，使得两类样本之间的间隔最大。
+
+  
   
   *(2) 支持向量*
   
@@ -4054,12 +4116,13 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
   
   几何间隔是指样本点到分离超平面的实际距离：
   
-  $ gamma = (bold(w)^T bold(x) + b) / ||bold(w)|| $
+  $ gamma = y_i (bold(w)^T bold(x) + b) / (||bold(w)||) $
   
-  SVM的目标是最大化最小几何间隔。
+  SVM 的优化目标为：*最大化全体样本中的最小几何间隔*。
+  其中，支持向量对应的几何间隔，就是全局最小几何间隔。
 ]
 
-#example[2024期末考题 - SVM软间隔与核技巧][
+#exam[2024期末][
   (1) 不完全线性可分情况下的SVM，说明软间隔最大化分类的约束条件和基本原理。
   
   (2) 非线性可分情况下的SVM，说明核技巧的基本原理。
@@ -4075,7 +4138,7 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
   
   引入松弛变量 $xi_i >= 0$，允许部分样本违反约束。
   
-  *约束条件*：$y_i(bold(w)^T bold(x)_i + b) >= 1 - xi_i$
+  *约束条件*：$y_i (bold(w)^T bold(x)_i + b) >= 1 - xi_i$
   
   *优化目标*：$min 1/2 ||bold(w)||^2 + C sum xi_i$
   
@@ -4160,7 +4223,7 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
 
 ]
 
-#exam[2025期末考题 - 基于最小欧氏距离的线性分类器设计（10分）][
+#exam[2025期末][
   已知 $m$ 类样本，请设计基于最小欧氏距离准则函数的线性分类器及其决策规则，并证明其为线性判别函数。
 ]
 
@@ -4170,43 +4233,43 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
   设有 $m$ 类样本集，每类样本集为 $omega_i$（$i = 1, 2, ..., m$）。
 
   *步骤1*：计算每类的均值向量（类中心）
-  $ bold(mu)_i = 1 / N_i sum_(x in omega_i) bold(x) $，$i = 1, 2, ..., m$
+  $ bold(mu)_i = 1 / N_i sum_(x in omega_i) bold(x) quad quad i = 1, 2, ..., m $
 
   *步骤2*：定义距离度量
   样本 $bold(x)$ 到第 $i$ 类中心 $bold(mu)_i$ 的欧氏距离平方：
-  $ D_i(bold(x)) = ||bold(x) - bold(mu)_i||^2 = (bold(x) - bold(mu)_i)^T (bold(x) - bold(mu)_i) $
+  $ D_i (bold(x)) = ||bold(x) - bold(mu)_i||^2 = (bold(x) - bold(mu)_i)^T (bold(x) - bold(mu)_i) $
 
   *步骤3*：决策规则
-  若 $ D_i(bold(x)) < D_j(bold(x)) $ 对所有 $j != i$ 成立，则判 $bold(x)$ 属于 $omega_i$ 类
+  若 $ D_i (bold(x)) < D_j (bold(x)) $ 对所有 $j != i$ 成立，则判 $bold(x)$ 属于 $omega_i$ 类
 
-  等价形式：$ "class" = arg min_i D_i(bold(x)) $
+  等价形式：$ "class" = arg min_i D_i (bold(x)) $
 
   *(2) 证明为线性判别函数*
 
   展开距离平方：
-  $ D_i(bold(x)) = (bold(x) - bold(mu)_i)^T (bold(x) - bold(mu)_i) $
+  $ D_i (bold(x)) = (bold(x) - bold(mu)_i)^T (bold(x) - bold(mu)_i) $
 
   $ = bold(x)^T bold(x) - 2 bold(mu)_i^T bold(x) + bold(mu)_i^T bold(mu)_i $
 
   由于第一项 $bold(x)^T bold(x)$ 对所有类相同，比较 $D_i$ 和 $D_j$ 时相互抵消。因此定义判别函数：
 
-  $ g_i(bold(x)) = -D_i(bold(x)) = 2 bold(mu)_i^T bold(x) - bold(mu)_i^T bold(mu)_i - bold(x)^T bold(x) $
+  $ g_i (bold(x)) = -D_i (bold(x)) = 2 bold(mu)_i^T bold(x) - bold(mu)_i^T bold(mu)_i - bold(x)^T bold(x) $
 
   或更简洁地，忽略常数项 $bold(x)^T bold(x)$，得线性判别函数：
 
-  $ g_i(bold(x)) = 2 bold(mu)_i^T bold(x) - bold(mu)_i^T bold(mu)_i $
+  $ g_i (bold(x)) = 2 bold(mu)_i^T bold(x) - bold(mu)_i^T bold(mu)_i $
 
   这可以写成线性形式：
-  $ g_i(bold(x)) = bold(w)_i^T bold(x) + w_(i 0) $
+  $ g_i (bold(x)) = bold(w)_i^T bold(x) + w_(i 0) $
 
   其中：
   - $bold(w)_i = 2 bold(mu)_i$（权向量）
   - $w_(i 0) = - bold(mu)_i^T bold(mu)_i$（阈值/偏置）
 
-  由于 $g_i(bold(x))$ 是 $bold(x)$ 的线性函数，因此基于最小欧氏距离的分类器本质上是线性分类器。
+  由于 $g_i (bold(x))$ 是 $bold(x)$ 的线性函数，因此基于最小欧氏距离的分类器本质上是线性分类器。
 
   *决策规则（线性判别函数形式）*：
-  若 $g_i(bold(x)) > g_j(bold(x))$ 对所有 $j != i$ 成立，则判 $bold(x)$ 属于 $omega_i$ 类。
+  若 $g_i (bold(x)) > g_j (bold(x))$ 对所有 $j != i$ 成立，则判 $bold(x)$ 属于 $omega_i$ 类。
 
   *注意*：最小距离分类器的局限在于仅利用了各类样本的均值信息，没有考虑方差和协方差等分布信息，因此分类效果常常不理想。
 ]
@@ -4254,7 +4317,7 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
   特征子集$A$确定了对数据集$D$的一个划分，样本标记$Y$对应真实划分。两个划分的差异越小，特征子集越好。
 
   *常用评价准则*：信息增益
-  $ "Gain"(A) = "Entropy"(D) - sum_(v in "Values"(A)) |D_v|/|D| "Entropy"(D_v) $
+  $ "Gain"(A) = "Entropy"(D) - sum_(v in "Values"(A)) (|D_v|) / (|D|) "Entropy"(D_v) $
 
   与决策树中信息增益的差异：这里$A$是属性集合，决策树中是单个属性。
 ]
@@ -4380,7 +4443,7 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
 #pagebreak()
  = 无监督学习：聚类
 
-#introduction[K-Means][层次聚类][距离度量][聚类评估]
+#introduction[K-Means][层次聚类][EM算法与GMM][距离度量][聚类评估]
 
 == K-Means算法
 
@@ -4508,13 +4571,37 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
   达到目标簇数2，停止。复杂度：层次聚类至少$O(n^2)$，全链接和平均链接达$O(n^2 log n)$。
 ]
 
-== 距离度量
+== EM算法与GMM聚类
 
-#property[数值型属性距离][
-  - *闵可夫斯基距离*：$d(x_i, x_j) = (|x_(i 1) - x_(j 1)|^h + ... + |x_(i r) - x_(j r)|^h)^(1/h)$
-  - $h=2$：欧氏距离；$h=1$：曼哈顿距离
-  - *切比雪夫距离*：$d(x_i, x_j) = max_k |x_(i k) - x_(j k)|$
-  - *加权欧氏距离*：$d(x_i, x_j) = sqrt(sum_k w_k (x_(i k) - x_(j k))^2)$
+#definition[高斯混合模型 (GMM)][
+  GMM 假设数据是由多个高斯分布混合而成的。对于 $d$ 维空间中的样本 $x$，其概率密度函数为：
+  $ p(x) = sum_(k=1)^K pi_k N(x | mu_k, Sigma_k) $
+  其中 $pi_k$ 是混合系数（权重），满足 $sum pi_k = 1$；$N(x | mu_k, Sigma_k)$ 是第 $k$ 个高斯分量。
+]
+
+#definition[EM算法 (Expectation-Maximization)][
+  EM 算法是一种迭代算法，用于含有隐变量（Hidden variables）的概率模型参数的极大似然估计。
+  
+  - *核心思想*：无法直接通过导数为0求得参数时，通过迭代：
+    1. *E步 (Expectation)*：利用当前参数估计隐变量的期望（或后验概率）。
+    2. *M步 (Maximization)*：根据E步的结果，通过最大化似然函数来更新参数。
+]
+
+#theorem[GMM中的EM步骤][
+  1. *初始化*：随机初始化 $pi_k, mu_k, Sigma_k$。
+  2. *E步 (Expectation)*：计算第 $i$ 个样本属于第 $k$ 个簇的后验概率（响应度 $gamma_(i k)$）：
+     $ gamma_(i k) = (pi_k N(x_i | mu_k, Sigma_k)) / (sum_(j=1)^K pi_j N(x_i | mu_j, Sigma_j)) $
+  3. *M步 (Maximization)*：根据响应度更新参数：
+     - $mu_k = (sum_i gamma_(i k) x_i) / (sum_i gamma_(i k))$ （响应度加权平均）
+     - $Sigma_k = (sum_i gamma_(i k) (x_i - mu_k)(x_i - mu_k)^T) / (sum_i gamma_(i k))$
+     - $pi_k = (sum_i gamma_(i k)) / n$
+  4. *收敛*：重复E、M步，直到对数似然函数收敛。
+]
+
+#note[
+  *GMM vs K-Means*：
+  - K-Means 是 *硬聚类*（Hard Clustering），样本必属于某一类；GMM 是 *软聚类*（Soft Clustering），给出样本属于各类的概率。
+  - K-Means 可视为 GMM 的特例（协方差全相等且趋于0，混合系数相等）。
 ]
 
 
@@ -4550,7 +4637,7 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
 
 
 #problemset[
-#example[2025期末考题 - K均值算法一般流程（20分）][
+#exam[2025期末 - K均值算法一般流程（20分）][
   给定 $D$ 维空间上的数据集 $X = {x_1, ..., x_N}$，这些数据的类别未知。K均值算法将数据集划分为 $k$ 个数据簇，每个簇的聚类中心记为 $(mu_1, ..., mu_k)$。
   请陈述 K均值算法的一般流程。
 ]
@@ -4558,17 +4645,17 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
 #solution[
   K-Means算法的一般流程如下：
 
-  *Step 0: 初始化*：指定 $k$，随机选择初始聚类中心
-  *Step 1: 分配*：对每个样本 $x_i$，分配到最近的簇：$c_i = "argmin"_j ||x_i - mu_j||^2$
-  *Step 2: 更新*：重新计算每个簇的中心：$mu_j = 1/|C_j| sum_(x in C_j) x$
-  *Step 3: 迭代*：重复Step 1-2直到收敛
+  *Step 0: 初始化*：指定 $k$，随机选择初始聚类中心 \
+  *Step 1: 分配*：对每个样本 $x_i$，分配到最近的簇：$c_i = "argmin"_j ||x_i - mu_j||^2$ \
+  *Step 2: 更新*：重新计算每个簇的中心：$mu_j = 1/|C_j| sum_(x in C_j) x$ \
+  *Step 3: 迭代*：重复Step 1-2直到收敛 
 
   *优化目标*：$J = sum_(j=1)^k sum_(x in C_j) ||x - mu_j||^2$
 
   *注意事项*：初值敏感；需指定$k$；仅适用凸形簇；对离群点敏感。
 ]
 
-#exam[2024期末考题 - K-Means聚类计算（10分）][
+#exam[2024期末 - K-Means聚类计算（10分）][
   利用 K 均值聚类算法对如下包含 5 个二维样本的数据集进行聚类：
 
   $ bold(X) = mat(0, 1, 5, 5, 0; 2, 0, 0, 0, 2) $
@@ -4608,7 +4695,7 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
   - 簇2：${(1,0), (5,0), (0,0)}$，质心 $(2, 0)$
 ]
 
-#example[2024期末考题 - EM算法与GMM聚类][
+#exam[2024期末 - EM算法与GMM聚类][
   可以用EM算法估计高斯混合模型（GMM）的参数 $theta$。请：
   
   (1) 写出EM算法的核心思想和具体步骤
@@ -4821,6 +4908,7 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
 //$ J = sum_(j=1)^k sum_(x in C_j) ||x - mu_j||^2 $
 //
 //#pagebreak()
+
 = 深度学习
 
 #introduction[深度学习概述][特征学习][梯度消失][预训练与微调][深度vs传统机器学习]
@@ -4975,29 +5063,29 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
     for i in (0.5, 1.5, 2.5, 3.5) {
       circle((-2, i), radius: 0.25, fill: rgb("#e3f2fd"), stroke: 1pt)
     }
-    content((-2, 4.2), [输入层\n$x$])
+    content((-2, 4.2), [#align(center)[输入层 \ $x$]])
     
     // 编码器隐藏层
     for i in (1, 2, 3) {
       circle((0, i), radius: 0.25, fill: rgb("#fff3e0"), stroke: 1pt)
     }
-    content((0, 4.2), [编码器\nEncoder])
+    content((0, 4.2), [#align(center)[编码器 \ Encoder]])
     
     // Code层（瓶颈层）
     circle((2, 2), radius: 0.25, fill: rgb("#f3e5f5"), stroke: 1pt)
-    content((2, 3.2), [Code\n瓶颈层])
+    content((2, 3.2), [#align(center)[Code \ 瓶颈层]])
     
     // 解码器隐藏层
     for i in (1, 2, 3) {
       circle((4, i), radius: 0.25, fill: rgb("#fff3e0"), stroke: 1pt)
     }
-    content((4, 4.2), [解码器\nDecoder])
+    content((4, 4.2), [#align(center)[解码器 \ Decoder]])
     
     // 输出层
     for i in (0.5, 1.5, 2.5, 3.5) {
       circle((6, i), radius: 0.25, fill: rgb("#e8f5e9"), stroke: 1pt)
     }
-    content((6, 4.2), [输出层\n$hat(x)$])
+    content((6, 4.2), [#align(center)[输出层 \ $ hat(x)$]])
     
     // 连接线
     for i in (0.5, 1.5, 2.5, 3.5) {
@@ -5368,7 +5456,7 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
     }  
     // 箭头
     line((1.5, 2), (3, 2), stroke: 1.5pt, mark: (end: ">"))
-    content((2.25, 2.3), [MaxPool\n$2 times 2$])
+    content((2.5, 2.3), [MaxPool \n $2 times 2$])
     
     // 输出特征图 (2x2)
     content((5, 3), [输出特征图 ($2 times 2$)])
@@ -5411,7 +5499,7 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
     // 第一层：原始图像
   
     rect((-4.5, -1), (-3.5, 0.5), fill: rgb("#e3f2fd"), stroke: 1pt)
-    content((-4, 0), [原始图像])
+    content((-4, 0.8), [原始图像])
     content((-4, -2), [像素级])
     
     // 箭头
@@ -5447,7 +5535,7 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
     // 第五层：分类
     content((9.5, -2), [人脸])
     rect((9, -1), (10, 0.5), fill: rgb("#f3e5f5"), stroke: 1pt)
-    content((9.5, 0), [分类结果])
+    content((9.5, 0.8), [分类结果])
     
     // 层次标注
     content((-4, 1.5), [低层])
@@ -5667,12 +5755,12 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
     // 标注W
     content((1, 2.5), [$W$])
     content((3, 2.5), [$W$])
-    content((0, 3), [$V$])
-    content((2, 3), [$V$])
-    content((4, 3), [$V$])
-    content((0, 1), [$U$])
-    content((2, 1), [$U$])
-    content((4, 1), [$U$])
+    content((0.3, 3), [$V$])
+    content((2.3, 3), [$V$])
+    content((4.3, 3), [$V$])
+    content((0.3, 1), [$U$])
+    content((2.3, 1), [$U$])
+    content((4.3, 1), [$U$])
     
     // 说明
     content((2, -1.2), [权重矩阵 $W$ 各时间步共享])
@@ -5730,7 +5818,7 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
     
     // 主细胞
     rect((-1, -1), (1, 1), fill: rgb("#fff3e0"), stroke: 1.5pt)
-    content((0, 0), [LSTM\n单元])
+    content((0, 0), [#align(center)[LSTM\ 单元]])
     
     // 输入
     line((-2, -0.5), (-1, -0.5), stroke: 1pt, mark: (end: ">"))
@@ -5799,7 +5887,6 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
     circle((-0.5, 1.5), radius: 0.25, fill: rgb("#ffcdd2"), stroke: 1pt)
     content((-0.5, 1.5), [×])
     line((-1, 1.5), (-0.75, 1.5), stroke: 0.5pt)
-    line((-0.5, 1), (-0.5, 1.25), stroke: 0.5pt)
     
     // 输入门乘法
     circle((1.5, -0.5), radius: 0.25, fill: rgb("#c8e6c9"), stroke: 1pt)
@@ -5998,7 +6085,7 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
 ]
 
 #problemset[
-#example[2024期末考题 - 自编码器原理与用途][
+#exam[2024期末 - 自编码器原理与用途][
   自编码器将输入向量 $x$ 转换为中间向量 $z$，再将中间向量 $z$ 转换为向量 $x'$。请回答：
   
   (1) $x'$ 的长度与向量 $x$ 的长度有什么关系（大于、小于还是等于）？为什么？
@@ -6045,7 +6132,7 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
   5. *图像生成*：变分自编码器（VAE）可从潜在空间采样生成新图像
 ]
 
-#example[2024期末考题 - RNN计算公式][
+#exam[2024期末 - RNN计算公式][
   根据下方循环神经网络示意图，写出输出层节点 $o_t$ 的计算公式（信息传递方向为从右向左）。其他参数符号自行定义。
   
   #figure(
@@ -6054,51 +6141,6 @@ $ dif sigma(x)/dif x = sigma(x)(1 - sigma(x)) $
   )
 ]
 
-
-#example[2024期末考题 - MSE最小化与极大似然假设证明（10分）][
-  证明：任一学习算法如果使输出的假设预测和训练数据之间的误差平方最小化，它将输出一极大似然假设。
-  
-  *假定*：训练样本的目标值被正态分布随机噪声干扰。
-  
-  已知 $X ~ "N"(mu, sigma^2)$，其概率密度函数为：
-  $ f(x; mu, sigma^2) = 1 / (sqrt(2 pi) sigma) e^(-(x - mu)^2 / (2 sigma^2)) $
-  
-  似然函数：
-  $ L(mu, sigma^2) = product_(i=1)^m 1 / (sqrt(2 pi) sigma) e^(-(x_i - mu)^2 / (2 sigma^2)) $
-]
-
-#solution[
-  *证明思路*：最小化误差平方和 $<=>$ 最大化在正态噪声假设下的似然函数。
-
-  *Step 1*：写出似然函数
-  
-  对于 $m$ 个独立同分布的训练样本 ${(x_i, y_i)}$，假设目标值 $y_i$ 与真实函数 $f(x_i)$ 之间存在高斯噪声 $epsilon_i ~ "N"(0, sigma^2)$：
-  $ y_i = f(x_i) + epsilon_i $
-  
-  因此 $y_i$ 服从以 $f(x_i)$ 为均值、$sigma^2$ 为方差的正态分布：
-  $ P(y_i | x_i, h) = 1 / (sqrt(2 pi) sigma) e^(-(y_i - h(x_i))^2 / (2 sigma^2)) $
-
-  训练数据的似然函数（对 $i=1..m$ 相乘）：
-  $ L(h) = product_(i=1)^m 1 / (sqrt(2 pi) sigma) e^(-(y_i - h(x_i))^2 / (2 sigma^2)) $
-
-  *Step 2*：取对数似然
-  $ 
-  "ln" L(h) = sum_(i=1)^m "ln"(1 / (sqrt(2 pi) sigma)) - sum_(i=1)^m (y_i - h(x_i))^2 / (2 sigma^2)
-  $
-  $ 
-  = m "ln"(1 / (sqrt(2 pi) sigma)) - 1 / (2 sigma^2) sum_(i=1)^m (y_i - h(x_i))^2
-  $
-
-  *Step 3*：最大化对数似然
-  由于第一项 $m "ln"(1/(sqrt(2 pi) sigma))$ 是与假设 $h$ 无关的常数，最大化 $"ln" L(h)$ 等价于最小化：
-  $ J(h) = sum_(i=1)^m (y_i - h(x_i))^2 $
-
-  这正是误差平方和（SSE）！
-
-  *结论*：在高斯噪声假设下，最小化误差平方和等价于最大化似然函数，因此输出的假设是极大似然假设（ML假设），即 $h_"ML" = "argmax"_h L(h)$。
-
-  *关键点*：噪声服从正态分布是"最小二乘法等价于极大似然估计"的前提条件。若噪声服从其他分布（如拉普拉斯分布），则最小化误差绝对值而非平方和。
-]
 
 
 #solution[
